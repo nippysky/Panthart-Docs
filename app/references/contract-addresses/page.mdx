@@ -1,0 +1,34 @@
+export const metadata = { title: 'Contract Addresses' }
+
+# Contract Addresses
+
+This page lists the **official Panthart smart contracts** used by the live marketplace on **Electroneum EVM**. Explorer verification links are added as soon as verification is complete.
+
+> For security and anti–phishing: always cross-check addresses here with the block-explorer links we publish.
+
+---
+
+## Mainnet — Electroneum EVM
+
+| Contract | Address | ABI | Notes |
+| --- | --- | --- | --- |
+| **Marketplace (Core)** | — | <a href="/abi/marketPlaceCoreABI.json" download>Download ABI</a> | Executes listings, purchases, and auctions for ERC-721 & ERC-1155. Enforces the **2.5%** marketplace fee and routes splits to the Reward Distributor and fee wallet at settlement. |
+| **Reward Distributor** | — | <a href="/abi/rewardDistributorABI.json" download>Download ABI</a> | Accrues **1.5%** of each trade and enables proportional claims by **Non-Fungible Comrades** holders. Designed for transparent, claim-on-demand rewards. |
+| **ERC-721 Drop (Factory/Drop)** | — | <a href="/abi/ERC721DropABI.json" download>Download ABI</a> | Deploys ERC-721 drop collections with allowlist/presale, public mint, supply limits, and reveal workflows (placeholder → final metadata). |
+| **ERC-1155 Single Drop** | — | <a href="/abi/ERC1155SingleDropABI.json" download>Download ABI</a> | Mints ERC-1155 tokens with **shared metadata** and configurable total supply—ideal for editions, passes, and game items. |
+| **Multisig (Admin)** | — | <a href="/abi/multiSigABI.json" download>Download ABI</a> | Multi-party administration for sensitive actions (e.g., fee wallet updates, parameter changes, emergency controls). Raises operational security with quorum-based approvals. |
+| **Stolen Registry** | — | <a href="/abi/stolenRegistryABI.json" download>Download ABI</a> | Registry for **flagging compromised collections or specific token IDs**. The marketplace consults this registry to prevent listing, bidding, or settlement on flagged assets. |
+| **NFT Factory** | — | <a href="/abi/NFTFactoryABI.json" download>Download ABI</a> | General factory utilities used by Panthart’s create flows to **spin up new NFT contracts** (single or collection patterns) with standardized metadata/IPFS conventions. |
+| **Featured Collection Auction** | — | <a href="/abi/FeaturedAuction.json" download>Download ABI</a> | Curated auction logic for **featured placements** and spotlighted sales. Supports reserve price and schedules aligned with marketplace curation. |
+
+> **Address visibility.** Addresses appear here immediately after mainnet publication and explorer verification. If an address is temporarily not shown, it is not yet publicly posted.
+
+---
+
+## Disclosure & verification policy
+
+- **Single source of truth.** This page is the canonical list of Panthart contracts.  
+- **Explorer verification.** We verify each contract on the Electroneum explorer and link the verified artifact (source, compiler, settings, and ABI).  
+- **Upgrades.** When a contract is upgraded, the new address is **added as a new row** (e.g., “Marketplace v2”). Previous addresses remain listed for historical/audit purposes.  
+- **ABIs.** Production ABIs are hosted from this site under `/abi/` and reflect the interfaces used by the live app.  
+- **Reporting.** If you suspect an incorrect or malicious address elsewhere, report it via **Security & Disclosure** and only trust the addresses listed here.

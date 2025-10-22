@@ -1,0 +1,119 @@
+export const metadata = { title: 'Collectors' }
+
+# Collectors
+
+Browse collections, place bids, or buy at fixed price. Your wallet stays in your control—Panthart is **non-custodial** and all settlement happens on-chain.
+
+> TL;DR: Connect wallet → pick an item → buy or bid → the marketplace escrow contract handles the rest. Creator royalties (if present) and marketplace fees settle automatically at transfer.
+
+---
+
+## Quick links
+
+<DocsCards
+  items={[
+    {
+      title: 'Browse Collections',
+      desc: 'Discover verified collections, trending drops, and top creators.',
+      href: 'https://panth.art/collections'
+    },
+    {
+      title: 'Live Auctions',
+      desc: 'Bid in time-boxed sales with transparent on-chain increments.',
+      href: 'https://panth.art/auction'
+    },
+    {
+      title: 'On Sale (Fixed-Price)',
+      desc: 'Instant purchases with a single confirmation.',
+      href: 'https://panth.art/listings'
+    }
+  ]}
+/>
+
+---
+
+## Before you buy
+
+- **Wallet & network.** Use a modern EVM wallet (e.g., Rabby, MetaMask) connected to **Electroneum EVM**.  
+- **Gas.** Network fees are low; you’ll see a small gas charge to approve tokens (first time) and to finalize a buy/bid.  
+- **Storage.** Media and metadata live on IPFS/Arweave per collection policy; provenance events live on-chain.
+
+---
+
+## Finding items
+
+- **Collections directory.** Filter by verified status, category, supply (721/1155), and floor price:  
+  **Browse →** [panth.art/collections](https://panth.art/collections)  
+- **Live auctions.** Sorted by ending soon / highest bid:  
+  **Bid now →** [panth.art/auction](https://panth.art/auction)  
+- **Fixed-price marketplace.** Everything instantly buyable:  
+  **Shop →** [panth.art/listings](https://panth.art/listings)
+
+---
+
+## Buying at fixed price
+
+1. Open the item page and review metadata, edition, and royalty note.  
+2. Click **Buy now**, confirm the total (price + gas).  
+3. Settlement routes: seller receives proceeds, creator royalty (if configured) is paid, and **2.5% marketplace fee** is collected (**1.5%** → Reward Distributor, **1%** → Panthart fee wallet).  
+4. The NFT transfers to your wallet instantly after chain finality.
+
+> First-time buyers may see an **approval** step (ERC-20 or WETH-style flows for certain listings). You’ll only do this once per token.
+
+---
+
+## Bidding in auctions
+
+- **Format.** English-style timed auctions with on-chain increments and optional anti-sniping extension.  
+- **Placing a bid.** Enter a value >= current bid + min increment. Your funds escrow in the marketplace contract.  
+- **Outbid?** Your previous bid is released back to your wallet immediately.  
+- **Win.** When the timer ends, the contract finalizes: NFT transfers to you; payouts and fees settle atomically.
+
+> Watch the **ending soon** filter on the auctions page for last-minute opportunities:  
+> [panth.art/auction](https://panth.art/auction)
+
+---
+
+## Offers (where supported)
+
+- Make an **offer** below list price on eligible items or entire collections (floor offers).  
+- Creators/sellers can accept from their dashboard; settlement mirrors a normal sale.  
+- Expired or declined offers automatically release the escrow back to your wallet.
+
+---
+
+## Fees, rewards, and royalties
+
+- **Marketplace fee:** **2.5%** of the final sale.  
+  - **1.5%** flows to the **Reward Distributor** for Non-Fungible Comrades holders.  
+  - **1%** flows to the **Panthart fee wallet**.  
+- **Creator royalties (optional):** Honored at list/sale time per collection policy.  
+- **Gas:** Minimal, paid by the actor who triggers each action (buyer for buy/bid, seller for list/cancel).
+
+Need to see exact splits on a trade? Use the calculator on the docs homepage.
+
+---
+
+## Receipts & provenance
+
+- Every transfer emits standard ERC-721/1155 events for clear on-chain provenance.  
+- Item pages display **chain tx links** for verification on the Electroneum explorer.  
+- Your **Profile → Activity** shows a complete audit trail of buys, bids, and offers.
+
+---
+
+## Trust & safety
+
+- **Non-custodial.** We never hold your keys or NFTs.  
+- **Escrowed funds.** Auction and offer balances live in the marketplace contract until finalization or release.  
+- **Verification.** Favor verified collections and check contract addresses in [References → Contract Addresses](/references/contract-addresses).
+
+---
+
+## Troubleshooting
+
+- **“Insufficient funds / gas.”** Top up ETN and retry.  
+- **“Approval required.”** Confirm the one-time token approval and repeat your action.  
+- **“Tx pending.”** Wait for chain finality or open the tx in the explorer from the item page.
+
+If you hit a blocker, open **GitHub Issues** or ask in **Telegram** (links on the **Contact** page).

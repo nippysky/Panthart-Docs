@@ -1,0 +1,144 @@
+import { Callout, Tabs, Steps } from 'nextra/components'
+
+export const metadata = { title: 'Collections Management' }
+
+# Collections Management
+
+Own a collection? This page covers **profile & branding**, **mint controls** (for Drops), **royalties**, **payouts**, and **safety**. Everything is **non-custodial** and enforced by the underlying contracts.
+
+<Callout type="info">
+To manage a collection, connect the **owner wallet** (or a wallet with delegated admin rights, where supported).  
+If your project uses a **Multisig**, ensure enough signers are available for admin actions.
+</Callout>
+
+---
+
+## Collection profile & branding
+
+Keep your storefront crisp and trustworthy.
+
+**Editable fields**
+- **Name & symbol** — shown on item and collection pages.
+- **Description** — short, scannable; include links to roadmap/whitepaper if relevant.
+- **Logo (avatar)** — square, high-contrast works best in dark/light themes.
+- **Cover image (banner)** — wide (hero) image for collection header.
+- **Links** — website, X/Twitter, Telegram, Discord, and support docs.
+
+**Good hygiene**
+- Use consistent iconography between marketplace and socials.
+- Keep the description factual (supply, mint policy, royalties, license).
+- Verify your contract in the explorer and request **verified** status on the marketplace.
+
+---
+
+## Royalties & marketplace fees
+
+- **Royalties (optional):** honored at settlement per the collection’s configured policy.  
+- **Marketplace fee:** flat **2.5%** of the final sale — **1.5%** routed to the **Reward Distributor** (Non-Fungible Comrades holders), **1%** to the Panthart fee wallet.
+- **Currencies:** sales can settle in **ETN** (native) or selected **ERC-20s**; proceeds and fee splits follow the listing’s currency.
+
+> For buyers’ perspective and fee math examples, see **Collectors → [Buying & Bidding](/collectors/buying-bidding)** and the **Fee Calculator** on the docs homepage.
+
+---
+
+## 721 Drop controls (phased mint)
+
+If your collection is a **Drop** (ERC-721), you’ll see phase controls and supply caps in the UI.
+
+<Tabs items={['Setup', 'Presale/Allowlist', 'Public Mint']}>
+
+  <Tabs.Tab>
+  ## Setup
+
+  <Steps>
+    <ol>
+      <li><strong>Basics</strong> — name, symbol, max supply, base URI (placeholder if planning a reveal).</li>
+      <li><strong>Branding</strong> — logo, banner, description, links.</li>
+      <li><strong>Royalties</strong> — set policy according to your creator terms.</li>
+      <li><strong>Admins</strong> — add maintainers (if your contract supports delegated roles).</li>
+    </ol>
+  </Steps>
+
+  <Callout>
+    Max supply and certain invariants may be <em>locked</em> on chain. Double-check before saving.
+  </Callout>
+  </Tabs.Tab>
+
+  <Tabs.Tab>
+  ## Presale / Allowlist
+
+  <Steps>
+    <ol>
+      <li><strong>Upload allowlist</strong> — CSV or Merkle root (per contract UX).</li>
+      <li><strong>Window</strong> — open/close timestamps and price for allowlisted wallets.</li>
+      <li><strong>Per-wallet cap</strong> — enforce fair distribution.</li>
+    </ol>
+  </Steps>
+
+  </Tabs.Tab>
+
+  <Tabs.Tab>
+  ## Public Mint
+
+  <Steps>
+    <ol>
+      <li><strong>Price & currency</strong> — ETN or a supported ERC-20.</li>
+      <li><strong>Schedule</strong> — start time, optional end time.</li>
+      <li><strong>Per-wallet cap</strong> — optional; great for anti-whale control.</li>
+    </ol>
+  </Steps>
+
+  <Callout>
+    For ERC-20 mints, buyers will see a one-time <em>Approve</em> prompt before the first purchase with that token.
+  </Callout>
+  </Tabs.Tab>
+
+</Tabs>
+
+---
+
+## Proceeds & withdrawals
+
+On a Drop collection page, owners can withdraw **proceeds** that have accrued from on-chain mints and primary sales.
+
+- **Owner check** — the connected wallet must be the collection **owner** (or a permitted payout role).  
+- **Multi-currency** — proceeds withdraw in the **same currency** they were collected (ETN or the ERC-20 used).  
+- **Explorer links** — every withdrawal shows a tx link for auditability.
+
+<Callout type="warning">
+If your project uses a <strong>Multisig</strong> for admin functions or treasury, make sure the withdraw call is made by the Multisig address and has the required signatures.
+</Callout>
+
+---
+
+## Moderation & safety
+
+- **Freeze / unfreeze (if supported)** — temporarily lock sensitive parameters during incident response.  
+- **Blacklist / stolen registry (if present)** — integrate with your project’s stolen/flagged tokens policy.  
+- **Verification** — request or maintain verified status; keep socials and site links in sync.
+
+> Always cross-check contract addresses in **References → [Contract Addresses](/references/contract-addresses)** before executing admin actions.
+
+---
+
+## Troubleshooting
+
+**“I can’t edit the collection.”**  
+You’re not connected with the owner/admin wallet, or the contract is locked. Reconnect the correct wallet or switch to your Multisig.
+
+**“Withdraw button is disabled.”**  
+No proceeds are currently available, or you’re connected with a non-owner wallet.
+
+**“Reveal didn’t update images.”**  
+Your new base URI may not be reachable or the cache hasn’t refreshed yet. Verify the CID, then hard refresh; confirm the `tokenURI(tokenId)` on chain points to the new location.
+
+**“Presale wallets rejected.”**  
+The allowlist on chain doesn’t match your list. Re-generate proofs / Merkle root and update the config before reopening.
+
+---
+
+## Related
+
+- **Creators → [Create NFTs](/creators/create-nft)** — 721 Drop, Single 721, Single 1155  
+- **Collectors → [Transfers & Escrow](/collectors/transfers-escrow)** — settlement, refunds, safety  
+- **References → [Contract Addresses](/references/contract-addresses)** — official addresses for verification

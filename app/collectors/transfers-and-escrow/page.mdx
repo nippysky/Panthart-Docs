@@ -1,0 +1,125 @@
+import { Callout, Tabs } from 'nextra/components'
+
+export const metadata = { title: 'Transfers & Escrow' }
+
+# Transfers & Escrow
+
+Panthart is fully **non-custodial**. Every move—list, buy, bid, settle—executes on-chain, and the marketplace contracts handle escrow and payouts atomically for **predictability** and **safety**.
+
+<Callout type="warning">
+Always confirm you are:
+<br />• On the **official** Panthart website.
+<br />• Connected to the **Electroneum EVM** network.
+<br />• Interacting with **official contract addresses** (see **References → [Contract Addresses](/references/contract-addresses)**).
+</Callout>
+
+---
+
+## What “escrow” means here
+
+- **Listings & auctions** route funds/NFTs through the **marketplace contract** at the moment of settlement.  
+- The contract releases assets **only** when all conditions are met (price, time, bid rules), ensuring a single, atomic outcome:
+  **NFT → buyer**, **funds → seller/royalty/fees**.
+
+---
+
+## Currency handling (ETN + ERC-20)
+
+- **ETN (native):** paid directly with your buy/bid call (no approval step).
+- **ERC-20 tokens:** first use requires a **one-time approval** granting the marketplace contract spending allowance for that token; then the buy/bid call escrows the amount.
+- **Refunds / releases** return funds in the **same currency** they were escrowed in.
+
+> You can switch currency before confirming. If a listing or auction is denominated in a specific token, the UI prompts you to use that token.
+
+---
+
+## Settlement flows
+
+<Tabs items={['Fixed-price sale', 'Timed auction']}>
+
+  <Tabs.Tab>
+  ## Fixed-price sale
+
+  **Sequence**
+  1. Buyer confirms **Buy now** (and, for ERC-20, the one-time **Approve** if not done previously).
+  2. **Atomic settlement**:
+     - NFT transfers from seller → buyer.
+     - Seller receives proceeds.
+     - **Royalties (if configured)** are paid to the creator’s address.
+     - **Marketplace fee (2.5%)** is split: **1.5% → Reward Distributor**, **1% → Panthart fee wallet**.
+  3. Page shows a receipt with links to the **Electroneum explorer**.
+
+  **Edge cases**
+  - **Insufficient balance/gas:** transaction reverts; nothing changes on-chain.
+  - **Canceled before buy:** if seller canceled the listing just prior, your buy will revert safely.
+  </Tabs.Tab>
+
+  <Tabs.Tab>
+  ## Timed auction
+
+  **Sequence**
+  1. Bidder places a **bid** (escrowed in marketplace contract; first-time ERC-20 requires Approval).
+  2. If **outbid**, the prior bidder’s escrow is **released automatically** by the contract.
+  3. When the timer ends (respecting any anti-sniping extension, if configured):
+     - Highest bid is settled atomically.
+     - NFT transfers to the winner.
+     - Proceeds/royalties/fees distribute in one transaction.
+
+  **Edge cases**
+  - **Reserve not met:** the auction ends without a sale; the highest bid is released back to the bidder.
+  - **Finalization race:** the contract prevents double-finalization and ensures a single outcome.
+  </Tabs.Tab>
+
+</Tabs>
+
+---
+
+## ERC-1155 specific notes (editions)
+
+- **Partial fills:** a seller can list multiple editions; buyers choose **quantity** (up to per-wallet cap if set).
+- **Settlement:** proceeds, royalties, and marketplace fees scale with the purchased quantity.
+- **Escrow:** only the amount required for the selected quantity is escrowed/settled.
+
+---
+
+## Cancellations & releases
+
+- **Cancel listing:** seller can cancel before a sale; no funds are taken from buyers.  
+- **Cancel auction (no bids):** can be canceled safely if no valid bids exist.  
+- **Outbid release:** handled automatically; no extra signature required.  
+- **Offer cancel:** releases the escrow to the buyer immediately.
+
+> When a release happens, your wallet balance may update after the explorer confirms finality. Refresh if the UI lags.
+
+---
+
+## Safety checklist
+
+- **Spender check (ERC-20):** the Approve prompt must show the **official marketplace contract** as spender.  
+- **Contract check:** verify any contract you interact with against **References → [Contract Addresses](/references/contract-addresses)**.  
+- **Never share seed phrases** or sign arbitrary messages sent by strangers in DMs.  
+- Prefer **verified collections**; item pages link to the explorer for contract and token ID verification.
+
+---
+
+## Troubleshooting
+
+**“Approval loop keeps appearing”**  
+You’re switching tokens or the allowance is zero/insufficient. Approve **once per token**, then confirm the buy/bid.
+
+**“I was outbid but don’t see my funds”**  
+Funds are released on-chain immediately. If your wallet UI hasn’t refreshed, wait for finality or refresh the page; the balance should reflect shortly.
+
+**“Buy reverted right after I clicked”**  
+The listing may have just been canceled or sold. This is normal on a fast market; nothing was taken from your wallet.
+
+**“I paid gas but nothing changed”**  
+Open the tx link from the page. If the tx reverted, no state changed and only gas was spent.
+
+---
+
+## Related
+
+- **Collectors → [Buying & Bidding](/collectors/buying-bidding)** — step-by-step flows & wallet prompts  
+- **References → [Contract Addresses](/references/contract-addresses)** — official addresses for verification  
+- **Developers → [ABIs](/references/abis)** — for explorers and power users

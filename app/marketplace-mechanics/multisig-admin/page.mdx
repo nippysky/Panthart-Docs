@@ -1,0 +1,76 @@
+import { Callout } from 'nextra/components'
+
+export const metadata = { title: 'Multisig Admin' }
+
+# Multisig Admin
+
+Panthart’s protocol controls are secured by a **2-of-N multi-signature wallet**.  
+Two independent signatures are required for any admin transaction to execute on **Electroneum EVM**.
+
+<Callout type="info">
+The multisig is the sole authority for protocol-level changes. No single EOA can alter fees, pause flows, or move treasury funds.
+</Callout>
+
+---
+
+## Scope of control
+
+- **Marketplace parameters** — fee basis points and destination wallets used at settlement.
+- **Reward Distributor** — configuration governing distribution windows and funding (where applicable).
+- **Drops / pausable modules** — pause/unpause capability for sensitive flows exposed by contracts.
+- **Treasury movements** — protocol revenue transfers in **ETN** and supported **ERC-20** tokens.
+- **Stolen NFTs Flagging** — Flag and pause trade if a collection or an NFT item is reported and confirmed for fraudulent activity.
+
+All target contracts and addresses are listed in **References → [Contract Addresses](/references/contract-addresses)**.
+
+---
+
+## Threshold & signer set
+
+- **Threshold:** **2 signatures** required to authorize and execute any admin call.
+- **Signers:** a small, hardware-backed set maintained by the core team; membership and threshold changes are executed via the same multisig.
+
+The threshold supports signer availability while preserving separation of duties.
+
+---
+
+## Operational model
+
+- **Proposal & review:** admin calls are prepared off-chain and reviewed by a second signer prior to submission.
+- **Simulation:** calldata is simulated against current state before execution to confirm effects and gas bounds.
+- **Execution:** once two signatures are recorded on the multisig, the transaction is dispatched on-chain.
+- **Verification:** post-execution, emitted events and updated storage are checked and recorded.
+
+Each change is tied to an internal ticket and produces an auditable chain of evidence: proposal, calldata, signatures, transaction hash, and verification notes.
+
+---
+
+## Logging & auditability
+
+- **Change log:** timestamp, target contract, function signature, parameters (units/decimals), signers, and transaction hash.
+- **Provenance:** links to explorer verification and any relevant PRDs or internal docs.
+- **Public transparency:** material updates (e.g., fee changes, pause windows) are summarized in the Governance section.
+
+---
+
+## Incident posture
+
+- **Containment capability:** pausable modules allow fast containment of risky paths while keeping read-only surfaces available.
+- **Recovery readiness:** signer rotation (add/remove) and threshold adjustments are supported by the same 2-of-N framework.
+- **Reconciliation:** indexers and jobs reconcile state after any administrative action to ensure UI and caches reflect on-chain truth.
+
+---
+
+## Reliability guarantees
+
+- **Non-custodial control:** the multisig authorizes configuration; settlement and payouts remain fully on-chain and atomic.
+- **Deterministic outcomes:** all admin effects are enforced by contracts, observable via events, and repeatable under simulation.
+- **Least privilege in practice:** no user asset custody, no back-door transfers; only the documented admin surfaces are exposed.
+
+---
+
+## Related
+
+- **References → [Contract Addresses](/references/contract-addresses)**  
+- **Creators → [Collections Management](/creators/collections-management)**  
+- **Governance & Policies → [Security & Disclosure](/governance-and-policies/security-and-disclosure)**

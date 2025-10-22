@@ -1,0 +1,190 @@
+import { Callout, Steps, Tabs } from 'nextra/components'
+
+export const metadata = { title: 'Architecture' }
+
+# Architecture
+
+Panthart is a **non-custodial**, **event-driven** NFT marketplace built for fast UX on **Electroneum EVM**.  
+This page outlines the **frontend stack**, **smart contracts**, **indexing & data**, and **infra** that keep the marketplace smooth under load.
+
+<Callout>
+All user actions settle <strong>on-chain</strong>. Contracts handle escrow and payouts atomically; the UI and services subscribe to chain events for state.
+</Callout>
+
+---
+
+## Overview
+
+- **App** — Next.js (App Router) + Tailwind UI. Docs are Nextra (this site).  
+- **Wallets & chain** — Thirdweb Connect (wallet modal), **ethers** + **viem** for reads/writes.  
+- **Storage** — Media/metadata pinned to **IPFS** (Pinata). Cloud assets (UI/marketing) via **Cloudinary**.  
+- **Contracts** — ERC-721, ERC-1155, **Factory/Drop**, **Marketplace** (fixed-price & auctions), **Reward Distributor**, **Multisig**.  
+- **Data** — **Neon** (Postgres) + **Prisma** for fast queries.  
+- **Workers** — 18+ cron scripts on a DigitalOcean droplet: indexing, cache warmers, health checks, integrity scans.  
+- **Indexing** — Event listeners with safe **block-range pagination** and **reorg tolerance**; idempotent upserts.
+
+---
+
+## Frontend (User-facing app)
+
+<Tabs items={['Runtime', 'UX & UI', 'Wallet & Chain']}>
+
+  <Tabs.Tab>
+  ### Runtime
+
+  - **Next.js (App Router)** — server components for fast first paint; client islands for wallet flows.  
+  - **TypeScript** end-to-end for safety.  
+  - **Edge-friendly endpoints** for simple read APIs (where applicable).
+
+  <Callout type="info">
+    Docs (this site) run on **Nextra** (v4), but the marketplace UI is a separate Next.js app.
+  </Callout>
+  </Tabs.Tab>
+
+  <Tabs.Tab>
+  ### UX & UI
+
+  - **Tailwind CSS** for consistent, responsive styling.  
+  - **Accessible components** (focus rings, keyboard nav).  
+  - **Cloudinary** for responsive images & transforms (thumbnails, responsive banners).
+  </Tabs.Tab>
+
+  <Tabs.Tab>
+  ### Wallet & Chain
+
+  - **Thirdweb Connect** for wallet onboarding (Metamask, WalletConnect, etc.).  
+  - **ethers** + **viem** combo:  
+    - **ethers** for transactions/signing ergonomics.  
+    - **viem** for typed, fast, low-overhead reads.  
+  - **Multi-currency**: ETN (native) + selected ERC-20s; the UI guides approvals/spenders.
+  </Tabs.Tab>
+
+</Tabs>
+
+---
+
+## Smart contracts
+
+- **Marketplace (Core)** — listings, purchases, auctions; atomic settlement:
+  _NFT → buyer; fees/royalties → recipients; seller proceeds → seller_.  
+- **Reward Distributor** — routes **1.5%** of each trade to **Non-Fungible Comrades** holders (pro-rata).  
+- **Factory / Drops (ERC-721)** — presale/allowlist, public mint, reveal; owner-only controls.  
+- **ERC-1155** — single item with editions; quantity-aware flows.  
+- **Multisig** — admin controls & treasury safety (fee destinations, critical params).
+
+<Callout type="warning">
+Always verify the spender and addresses in your wallet prompts. The canonical list lives in <strong>References → Contract Addresses</strong>.
+</Callout>
+
+---
+
+## Storage & media
+
+- **IPFS (Pinata)** for on-chain media/metadata.  
+- Creator uploads map to a clean `/assets` + `/metadata` convention.  
+- During launch, Panthart auto-rewrites JSON `image` / `animation_url` to the **final CID paths** to avoid broken links.  
+- **Cloudinary** serves UI/marketing images with on-the-fly transforms (responsive, webp).
+
+---
+
+## Data & indexing
+
+- **Neon (Postgres)** + **Prisma**:  
+  - Catalogs, item summaries, listing/auction indexes, derived stats.  
+  - Optimized **composite indexes** for collection & trait filters.  
+- **Indexers** (DigitalOcean droplet):  
+  - Subscribe to chain **event logs** (Marketplace, Drops, Distributor).  
+  - **Block-range pagination** with backfills; durable checkpoints.  
+  - **Reorg-safe**: on mismatch, re-scan N blocks from the last finalized height.  
+  - Upsert policies keep writes **idempotent** (safe on retries).
+
+<Steps>
+  <ol>
+    <li><strong>Listen</strong> for events (list, buy, bid, settle, withdraw).</li>
+    <li><strong>Normalize</strong> into relational rows (entities, edges, balances).</li>
+    <li><strong>Enrich</strong> with IPFS metadata (cached) and image derivatives.</li>
+    <li><strong>Expose</strong> fast queries to the UI (SSR/ISR or client fetch).</li>
+  </ol>
+</Steps>
+
+---
+
+## Background workers (DigitalOcean)
+
+- 18+ **cron scripts** orchestrate:
+  - **Event backfills** & gap detection.  
+  - **Cache warmers** for hot collections, search, and trait filters.  
+  - **Health checks** (RPC latency, pinning status, image availability).  
+  - **Integrity scans** (mismatched metadata, stale URIs, failed pins).  
+  - **Rewards snapshots** & distributor monitoring.
+
+<Callout type="info">
+Workers are stateless; configuration & cursor state live in Postgres. Jobs can be moved to a queue runner if horizontal scale increases.
+</Callout>
+
+---
+
+## Fees, royalties & currency
+
+- **Marketplace fee: 2.5%** per sale  
+  - **1.5% → Reward Distributor**  
+  - **1.0% → Panthart fee wallet**
+- **Royalties** (if configured by collection) are paid at settlement.  
+- **Creation fee** (when minting via Panthart) covers IPFS + convenience services; **not fixed** and reviewed periodically.  
+- **Currency** is preserved end-to-end: list/bid currency = settlement currency (ETN or approved ERC-20).
+
+---
+
+## Reliability & safety
+
+- **Atomic settlement** — prevents partial states; either everything moves, or nothing.  
+- **Allowance prompts** — ERC-20 approvals are one-time per token; UI shows official spender.  
+- **Reorg tolerance** — indexers confirm past N blocks; conflicting data is corrected automatically.  
+- **Multisig** — sensitive admin actions require multiple signers.  
+- **Rate-limiting & retries** on RPC and IPFS calls with exponential backoff.
+
+---
+
+## Local → Mainnet lifecycle
+
+<Tabs items={['Local dev', 'Testnet', 'Mainnet']}>
+
+  <Tabs.Tab>
+  ### Local dev
+  - Contract iteration in **Solidity** with your preferred toolchain (Hardhat/Foundry).  
+  - UI wired to a local RPC or devnet; mock pinning & seeds.
+  </Tabs.Tab>
+
+  <Tabs.Tab>
+  ### Testnet
+  - Dry-run deploys of Marketplace/Drop/Distributor.  
+  - Indexers run in **shadow** mode to validate event pipelines.  
+  - Exploratory load via scripted mints and trades.
+  </Tabs.Tab>
+
+  <Tabs.Tab>
+  ### Mainnet
+  - Tagged deploys; addresses posted to **Contract Addresses**.  
+  - Indexers switch to **live** mode; workers enabled.  
+  - Cloudinary & IPFS pinned to production origins; caches warmed.
+  </Tabs.Tab>
+
+</Tabs>
+
+---
+
+## Why this works
+
+- **Fast UX** — Next.js SSR + cached reads + Cloudinary thumbs.  
+- **Trust** — non-custodial, on-chain settlement, verified addresses.  
+- **Scale** — event-driven architecture with reorg-safe indexers and horizontally scalable DB reads.  
+- **Creator-friendly** — automatic IPFS wiring, reveal support, royalties, and multi-currency listings.
+
+---
+
+## See also
+
+- **References → [Contract Addresses](/references/contract-addresses)**  
+- **Creators → [Collections Management](/creators/collections-management)**  
+- **Creators → [Media & Metadata](/creators/media-metadata)**  
+- **Collectors → [Transfers & Escrow](/collectors/transfers-escrow)**

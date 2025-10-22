@@ -1,0 +1,32 @@
+import { Callout } from 'nextra/components'
+
+export const metadata = { title: 'Fees & Rewards' }
+
+# Fees & Rewards
+
+Panthart charges **2.5%** per trade and splits automatically at settlement:
+- **1.5% → Reward Distributor** (claimable by **Non-Fungible Comrades** holders)
+- **1.0% → Panthart Fee Wallet**
+
+<FeeCalculator />
+
+## Formula
+
+Let `T` = trade amount (ETN/ETH equivalent). Then:
+- `fee = T × 0.025`
+- `rewards = T × 0.015`
+- `panthart = T × 0.010`
+- `seller_receives = T − fee`
+
+**Example**: `T = 100` → `fee = 2.5`, `rewards = 1.5`, `panthart = 1.0`, `seller_receives = 97.5`.
+
+## Edge cases
+
+- **Canceled listings/auctions:** no fee is charged.
+- **Failed settlement:** no fee is charged; listing remains or is marked failed.
+- **Refunds:** if a refund occurs off-chain, on-chain fee transfers are not reverted.
+- **Rounding:** fees are computed in base units; minor rounding may occur on dust values.
+
+<Callout type="info">
+Rewards accrue continuously and are claimable **on demand** by holders. Distribution is proportional to the number of Comrades held at claim time or as defined by the contract logic.
+</Callout>

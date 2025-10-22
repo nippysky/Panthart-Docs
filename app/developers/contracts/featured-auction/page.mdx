@@ -1,0 +1,12 @@
+export const metadata = { title: 'Featured Collection Auction' }
+
+# Featured Collection Auction
+
+Curated auction logic for **featured placements** and spotlighted sales. Supports reserve price and timed schedules aligned with marketplace curation.
+
+<ABIViewer file="FeaturedAuction.json" title="Interface" />
+
+## Flow
+- Curators schedule lot, reserve, and duration.
+- Bids and settlement events are emitted for feeds.
+- Consults Stolen Registry before execution.

@@ -1,0 +1,12 @@
+export const metadata = { title: 'Multisig' }
+
+# Multisig
+
+Multi-party administration for sensitive actions (e.g., fee wallet updates, parameter changes, emergency controls). Raises operational security with quorum-based approvals.
+
+<ABIViewer file="multiSigABI.json" title="Interface" />
+
+## Typical operations
+- Propose/confirm/execute transactions reaching the configured threshold.
+- Rotate signers (owner add/remove) via governance procedures.
+- Update fee recipients and distributor parameters.

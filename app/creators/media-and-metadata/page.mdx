@@ -1,0 +1,84 @@
+import { Callout, Tabs } from 'nextra/components'
+
+export const metadata = { title: 'Media & Metadata' }
+
+# Media & Metadata
+
+Great NFTs start with clean media and predictable metadata. Panthart makes the pinning easy and keeps the rules simple—so creators of any level can launch confidently.
+
+<Callout>
+Panthart pins files to **IPFS** during creation (via our managed pinning). We strongly recommend **immutable URIs** (content-addressed CIDs) for long-term trust and provenance.
+</Callout>
+
+---
+
+## Supported media (image / animation / audio)
+
+Panthart accepts all common formats used in EVM NFT ecosystems.
+
+- **Images** — `PNG`, `JPEG/JPG`, `WEBP`, **`GIF`** (animated).  
+  **Targets:** square masters **1200×1200** or **1600×1600**. Lossless (PNG/WebP-lossless) recommended for pixel art; high-quality JPEG/WebP for photos/illustration.
+- **Video** — `MP4`, `WEBM`, `MOV` (H.264/AAC or VP9/Opus recommended). Include a static `image` preview even if you use `animation_url`.
+- **Audio** — `MP3`, `OGG`, `WAV`. Include **cover art** via the `image` field.
+- **Large assets** — prefer compressed, streaming-friendly encodes for smooth on-chain UX (short playback starts quickly; full quality loads progressively).
+
+> Animated **GIF** is supported, but for long/large loops consider **MP4/WEBM** for better compression.
+
+---
+
+## The metadata contract (ERC-721 / ERC-1155)
+
+Panthart follows the de-facto ERC metadata shape used across marketplaces:
+
+- **Required (practical)**: `name`, `description`, `image`  
+- **Common optional**: `animation_url`, `external_url`, `background_color`  
+- **Traits**: `attributes` (array of typed traits: string, numeric, or date)  
+- **Royalties (legacy/OpenSea fields)**: `seller_fee_basis_points`, `fee_recipient`  
+  - `seller_fee_basis_points: 500` means **5%** royalty to `fee_recipient`.
+
+**Standards note:** Royalties are ultimately enforced by marketplace policy at settlement time. The fields above communicate intent to explorers and UIs.
+
+---
+
+## File naming & folder layout (important)
+
+Panthart’s creator flow accepts bulk folders and handles pinning. To keep everything aligned:
+
+**For 721 (one file per token):**
+
+
+- **Each `metadata/*.json` filename must match its asset name** (`1.json` ↔ `1.png`).  
+- The `image` (and `animation_url`, if present) will point to the matching pinned asset.
+
+**For 1155 editions (shared metadata):**
+
+- You may use **one metadata** file for all editions (shared `name`/`image`/`attributes`) and set **supply/editions** during creation.  
+- Alternative mode: separate files per tokenId if your contract variant exposes distinct per-id URIs.
+
+<Callout type="info">
+<strong>Good practice:</strong> Keep all filenames <code>1..N</code> with no gaps. Use UTF-8 JSON (no BOM). Avoid spaces and special characters in filenames to make CID paths predictable.
+</Callout>
+
+---
+
+## Example metadata (Comrades)
+
+Below is a real-world style JSON for one Comrade.  
+Notes inline after the code block.
+
+```json copy
+{
+  "name": "Comrade #1",
+  "description": "Meet Comrade #1. With a lime background, cream complexion, monkey jacket attire, tears eyes, brown papas cap head, bored mouth, this comrade is ready to turn your digital world into a playground of fun and flair.",
+  "image": "ipfs://bafybeig6bo24gmw2zjrgjuxonp2h4nmibx5ado3agts4k6ynilp35scdrm/1.png",
+  "attributes": [
+    { "trait_type": "BACKGROUND", "value": "Lime" },
+    { "trait_type": "COMPLEXION", "value": "Cream" },
+    { "trait_type": "ATTIRE", "value": "Monkey Jacket" },
+    { "trait_type": "EYES", "value": "Tears" },
+    { "trait_type": "HEAD", "value": "Brown Papas Cap" },
+    { "trait_type": "MOUTH", "value": "Bored" }
+  ],
+  "fee_recipient": "0xe785e1f0F48ee8ac4553F39618e230D8cFf45Ba3",
+  "seller_fee_basis_points": 500
+}

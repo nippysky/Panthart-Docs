@@ -1,0 +1,107 @@
+import { Callout, Steps, Tabs } from 'nextra/components'
+
+export const metadata = { title: 'Reward Distributor' }
+
+# Reward Distributor
+
+The Reward Distributor contract receives **1.5%** of every marketplace trade and makes those funds available to **Non-Fungible Comrades** holders on a **pro-rata** basis.
+
+<Callout>
+Settlement is on-chain and atomic: when a sale completes, the marketplace routes <strong>1.5%</strong> of the sale price to the Distributor, <strong>1.0%</strong> to the Panthart fee wallet, creator royalties (if any) to the collection recipient, and the remainder to the seller.
+</Callout>
+
+---
+
+## High-level model
+
+- **Accrual:** On each successful sale, the marketplace transfers **1.5%** of the sale price (in the listing currency: **ETN** or a supported **ERC-20**) into the Distributor.
+- **Eligibility:** Any wallet holding **Non-Fungible Comrades** (ERC-721) is eligible to claim a share of the accrued balance.
+- **Pro-rata share:** A holder’s claimable is proportional to the count of Comrades they hold relative to total supply at the time of accounting.
+- **Self-custody:** Rewards are **never** auto-pulled. Holders claim from the contract when they choose.
+
+---
+
+## Claiming flow (holder experience)
+
+<Steps>
+  <ol>
+    <li><strong>Hold Comrades:</strong> Keep your Non-Fungible Comrades in your wallet.</li>
+    <li><strong>Accrue:</strong> As trades occur on Panthart, rewards accumulate in the Distributor contract.</li>
+    <li><strong>Claim:</strong> Visit the claim UI (or call the contract) to withdraw your pro-rata rewards.</li>
+    <li><strong>Repeat:</strong> New trades continue to add to your claimable balance over time.</li>
+  </ol>
+</Steps>
+
+<Callout type="warning">
+If you transfer or sell your Comrades, future accrual reflects your new balance. Already-accrued but unclaimed rewards remain associated with your address per the accounting logic.
+</Callout>
+
+---
+
+## Example math
+
+Let:
+- Total Comrades supply = **10,000**
+- Your balance = **25**
+- A sale of **1,000 ETN** occurs
+
+Then:
+- Distributor receives **1.5% × 1,000 = 15 ETN**
+- Your instantaneous share of that sale = **(25 / 10,000) × 15 = 0.0375 ETN**
+
+Over many sales (mixed ETN / ERC-20 listings), your **claimable per token** grows in each currency. You can claim per currency when it’s worth your gas.
+
+---
+
+## Multi-currency behavior
+
+- Rewards accrue in the **same token** used for each sale (ETN or supported ERC-20s).
+- Your account may have **parallel claimable balances** across multiple tokens.
+- Claims withdraw the currency you select; there is **no auto-swap** between tokens.
+
+---
+
+## Administration
+
+- The **Multisig Admin** (2-of-N) is authorized for protocol-level parameters exposed by the Distributor (e.g., epoch/window settings if applicable, operational toggles).
+- Administrative actions are rare and recorded on-chain; addresses and roles are listed in **References → [Contract Addresses](/references/contract-addresses)**.
+
+<Callout type="info">
+The Distributor is <strong>not</strong> a custody wallet. Funds flow in automatically from marketplace settlements and flow out only via holder claims or authorized maintenance per contract design.
+</Callout>
+
+---
+
+## Events & observability
+
+Indexers and UIs track the following surfaces to keep dashboards and claim UIs accurate:
+
+- **Accrual events** emitted by the marketplace (sale settled) and the Distributor (funds credited).
+- **Claim events** emitted by the Distributor when a holder withdraws.
+- **Supply & balances** from the Comrades ERC-721 for pro-rata calculations.
+
+This event-driven model supports reorg-safe backfills and consistent “claimable now” views.
+
+---
+
+## Gas & timing tips
+
+- **Batching:** If you hold multiple Comrades, claiming less frequently can amortize gas.
+- **Token choice:** Claim when your **per-currency** balance is meaningful; wait on tiny residuals.
+- **Wallet safety:** Always confirm the token and amount shown by the claim UI matches your expectation before signing.
+
+---
+
+## Guarantees
+
+- **On-chain accounting:** No off-chain ledgers; all accruals and claims are verifiable on the explorer.
+- **Non-custodial:** You keep your NFTs and only pull rewards when you call `claim`.
+- **Deterministic payouts:** Pro-rata shares depend only on on-chain state (supply, balances, and accrued totals).
+
+---
+
+## Related
+
+- **Governance & Policies → [Multisig Admin](/governance-and-policies/multisig-admin)**  
+- **Collectors → [Transfers & Escrow](/collectors/transfers-escrow)**  
+- **References → [Contract Addresses](/references/contract-addresses)** • **[ABIs](/references/abis)**

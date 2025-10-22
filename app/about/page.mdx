@@ -1,0 +1,79 @@
+export const metadata = { title: 'About Panthart' }
+
+# About
+
+Panthart is a creator-first NFT marketplace on **Electroneum EVM**. We make minting simple, trading fair, and rewards transparent—so artists focus on art, collectors on curation, and developers on shipping.
+
+> **Fast chain. Tiny fees. Real rewards.**  
+> Panthart supports **ERC-721** and **ERC-1155**, charges a flat **2.5%** marketplace fee, and routes **1.5%** of every trade to our **Reward Distributor** for **Non-Fungible Comrades** holders, with **1%** to the Panthart fee wallet.
+
+---
+
+## Why Electroneum?
+
+Electroneum’s modern L1 fits NFT UX really well:
+
+- **~5-second finality (IBFT)** → near-instant confirmations for mints, bids, and listings.  
+- **Ultra-low gas (fractions of a cent)** → economical reveals, editions, and contract interactions.  
+- **EVM-compatible** → standard Solidity toolchains and familiar ERC-721/1155 behavior.  
+- **Energy-efficient / known validators** → low power profile with a straightforward trust model.
+
+If your mental model is *“Ethereum apps, but with low fees and fast finality,”* you’ll feel at home here.
+
+> Learn more: [Electroneum](https://electroneum.com/) • [Decentroneum](https://decentroneum.com/) _(project studio)_
+
+---
+
+## What you can build & trade
+
+### For creators
+- **One-click minting flows**: **721 Drop** (allowlist/presale + public), **Single 721**, **Single 1155** editions.  
+- **Fair economics**: simple 2.5% marketplace fee; fixed-price listings or auctions.  
+- **Admin safety**: sensitive changes gated with **Multisig**.
+
+### For collectors
+- **Low-friction trading** thanks to fast finality & low gas.  
+- **Aligned incentives**: 1.5% of fees distributed to **Non-Fungible Comrades** holders.
+
+### For developers
+- **Standard ABIs & contracts** with clear docs.  
+- **EVM toolchain**: Foundry/Hardhat friendly, familiar events and methods.
+
+---
+
+## Marketplace fee model (high level)
+
+- **Marketplace fee:** 2.5% of each sale.  
+- **Distribution:** **1.5% → Reward Distributor** (pro-rata to NF Comrades holders), **1% → Panthart fee wallet**.  
+- **Creator royalties (if any):** enforced at list/sale time per collection policy.
+
+> Try the **Fee Calculator** on the homepage to see exact splits for any trade amount.
+
+---
+
+## Quick next steps
+
+<DocsCards
+  items={[
+    {
+      title: 'Getting Started',
+      desc: 'Wallet, networks, and a 2-minute tour of Panthart.',
+      href: '/getting-started'
+    },
+    {
+      title: 'Create NFTs',
+      desc: '721 Drop, Single 721, Single 1155 — which one should you use?',
+      href: '/creators/create-nft'
+    },
+    {
+      title: 'Marketplace Mechanics',
+      desc: 'Listings, auctions, fees, profiles, activity and more.',
+      href: '/marketplace-mechanics'
+    },
+    {
+      title: 'Developers',
+      desc: 'Contracts, ABIs, addresses, examples.',
+      href: '/developers'
+    }
+  ]}
+/>

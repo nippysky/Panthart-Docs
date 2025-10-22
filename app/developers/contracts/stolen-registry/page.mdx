@@ -1,0 +1,12 @@
+export const metadata = { title: 'Stolen Registry' }
+
+# Stolen Registry
+
+Registry for **flagging compromised collections or specific token IDs**. The marketplace consults this registry to prevent listing, bidding, or settlement on flagged assets.
+
+<ABIViewer file="stolenRegistryABI.json" title="Interface" />
+
+## Behavior
+- Flags may be set per collection or per tokenId.
+- Marketplace checks this contract before allowing listing/bid/settlement.
+- Admin updates gated by multisig.

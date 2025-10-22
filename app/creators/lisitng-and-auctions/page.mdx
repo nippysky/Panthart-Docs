@@ -1,0 +1,133 @@
+import { Callout, Tabs, Steps } from 'nextra/components'
+
+export const metadata = { title: 'Listing & Auctions' }
+
+# Listing & Auctions
+
+Turn your NFTs into live marketplace inventory with **fixed-price** listings or **timed auctions**.  
+Panthart is non-custodial: your wallet signs; the marketplace settles on-chain.
+
+<Callout type="info">
+**Fees & royalties at a glance:** each completed sale settles creator royalties (if configured) and a **2.5% marketplace fee**  
+(**1.5% → Reward Distributor**, **1% → Panthart**). Currencies supported: **ETN** (native) and selected **ERC-20s**.
+</Callout>
+
+---
+
+## Choose a selling format
+
+<Tabs items={['Fixed price', 'Timed auction']}>
+
+  <Tabs.Tab>
+  ## Fixed-price listing
+
+  Simple, instant purchases—best for liquid items and editions.
+
+  <Steps>
+    <ol>
+      <li><strong>Set price & currency</strong> — choose <em>ETN</em> or a supported <em>ERC-20</em>.</li>
+      <li><strong>Approve once (ERC-20 only)</strong> — give the marketplace spend allowance for that token.</li>
+      <li><strong>Confirm “List”</strong> — the NFT becomes buyable immediately.</li>
+    </ol>
+  </Steps>
+
+  **Buyer experience**
+  - Click **Buy now** → (first-time ERC-20 approval if needed) → confirm purchase.
+  - Settlement is atomic: <em>NFT → buyer</em>, <em>proceeds/royalties/fees → recipients</em>.
+
+  **Good to know**
+  - **ERC-1155 editions:** pick quantity when listing (and buyers can choose quantity when purchasing).
+  - **Edit price:** supported via safe relist under the hood; may cost a tiny gas update.
+  - **Cancel listing:** allowed any time before sale; requires a small on-chain tx.
+
+  **Shop fixed-price:** [panth.art/listings](https://panth.art/listings)
+  </Tabs.Tab>
+
+  <Tabs.Tab>
+  ## Timed auction
+
+  Maximize price discovery with on-chain bids and a clear end time.
+
+  <Steps>
+    <ol>
+      <li><strong>Set reserve price</strong> — optional; item won’t settle below this.</li>
+      <li><strong>Choose duration</strong> — e.g. 24–72 hours; optional start time (schedule).</li>
+      <li><strong>Create auction</strong> — approve once (if ERC-20) and confirm the auction tx.</li>
+    </ol>
+  </Steps>
+
+  **Bidding rules**
+  - Bids must be ≥ current bid + min increment (and ≥ reserve if set).
+  - When outbid, a bidder’s escrow is **released automatically** by the contract.
+  - Auctions can use **anti-sniping extensions** (optional), adding a few minutes for late bids.
+
+  **Ending & settlement**
+  - At end time (after any extensions), settlement transfers the NFT to the highest bidder and pays proceeds/royalties/fees.
+  - Anyone can trigger settlement if the UI hasn’t yet (trustless finalization).
+
+  **Cancelation**
+  - You can cancel **only if there are no valid bids**.
+  </Tabs.Tab>
+
+</Tabs>
+
+---
+
+## Multi-currency notes (ETN + ERC-20)
+
+- **ETN:** direct list/sell—no approval step.  
+- **ERC-20:** one-time **Approve** for each token you list in; after that, listing/selling in that token is a single tx.  
+- **Proceeds:** withdraw and settle in the **same currency** as the listing/auction.
+
+<Callout>
+To adjust currencies, cancel and relist in your desired token so the UI and buyers see the correct denomination.
+</Callout>
+
+---
+
+## Delisting, edits & inventory
+
+- **Edit price** (fixed-price): supported via safe relist; tiny gas fee applies.  
+- **Cancel listing/auction**: listings can be canceled anytime before sale; auctions only when there are **no valid bids**.  
+- **Batch list (1155)**: list multiple editions at once with a single flow (where supported).  
+- **Relist quickly**: canceled items stay visible in your **Profile → On sale** panel for fast relist.
+
+---
+
+## Visibility & trust
+
+- **Verified collections** surface higher in discovery modules. Keep logos, banners, and descriptions tidy.  
+- Each item links to the **Electroneum explorer** (contract + token ID) for on-chain verification.  
+- Prefer **official** contract addresses (see **References → [Contract Addresses](/references/contract-addresses)**).
+
+---
+
+## Safety checklist (sellers)
+
+- Double-check the **spender** address in any ERC-20 approval—it should be the **official marketplace contract**.  
+- If using a **Multisig** for admin/treasury, ensure the listing/withdrawal is initiated by the Multisig with the required signatures.  
+- Never sign blind messages from strangers; the site will never ask for your seed phrase.
+
+---
+
+## Troubleshooting
+
+**“My listing isn’t visible.”**  
+Wait for block finality and refresh. Ensure you’re on the public collection view (not just your profile).
+
+**“Price edit didn’t update.”**  
+Edits may relist under the hood. If a race occurred (someone bought during edit), your tx will revert safely.
+
+**“Can’t cancel auction.”**  
+One or more valid bids exist; the contract blocks cancelation. You can still complete settlement at end time.
+
+**“Wrong currency shown.”**  
+Cancel and relist in your intended token. Buyers will only see and pay in the listing currency.
+
+---
+
+## Related
+
+- **Collectors → [Buying & Bidding](/collectors/buying-bidding)** — flows, currencies, wallet prompts  
+- **Collectors → [Transfers & Escrow](/collectors/transfers-escrow)** — settlement, refunds, releases  
+- **References → [Contract Addresses](/references/contract-addresses)** — official marketplace, distributor, multisig, and drop contracts

@@ -1,0 +1,145 @@
+import { Callout, Tabs } from 'nextra/components'
+
+export const metadata = { title: 'Royalties & Fees' }
+
+# Royalties & Fees
+
+Panthart settles sales **on-chain** and pays everyone in a single atomic transaction.  
+This page explains **who gets paid**, **in what order**, and **how the math works** for both fixed-price and auction settlements.
+
+<Callout type="info">
+All payouts occur in the <strong>same currency</strong> as the listing or winning bid (ETN or a supported ERC-20).  
+No custody, no manual disbursements—everything is enforced by the marketplace contracts.
+</Callout>
+
+---
+
+## Payout order (at settlement)
+
+1. **Marketplace fee — 2.5% of sale price**  
+   • **1.5% → Reward Distributor** (for Non-Fungible Comrades holders)  
+   • **1.0% → Panthart fee wallet**
+
+2. **Creator royalties** (when configured)  
+   • Paid to the creator/collection royalty address according to the collection policy.
+
+3. **Seller proceeds**  
+   • The remainder goes to the seller.
+
+> If a collection specifies **0%** royalty, step 2 is skipped and the remainder after the 2.5% fee goes to the seller.
+
+---
+
+## Sources of royalty configuration
+
+- **Collection policy (preferred):** The collection’s royalty settings configured in the marketplace/collection contract.  
+- **Metadata royalty fields (display/intent):** `seller_fee_basis_points` and `fee_recipient` help UIs and explorers display royalty intent.  
+  Actual enforcement happens at settlement per the collection/marketplace policy.
+
+<Callout>
+If a collection defines a royalty policy, <strong>every sale that matches that policy pays out the royalty</strong> automatically during settlement.
+</Callout>
+
+---
+
+## Examples
+
+<Tabs items={['Fixed price (ETN)', 'Auction (ERC-20)']}>
+
+  <Tabs.Tab>
+  ### Fixed price (ETN)
+
+  **Sale price:** 1,000 ETN  
+  **Collection royalty:** 5% (to creator wallet)
+
+  **Breakdown**
+  - Marketplace fee (2.5%): 25 ETN  
+    - → Reward Distributor (1.5%): 15 ETN  
+    - → Panthart (1.0%): 10 ETN
+  - Creator royalty (5%): 50 ETN
+  - **Seller receives:** 1,000 − 25 − 50 = **925 ETN**
+  </Tabs.Tab>
+
+  <Tabs.Tab>
+  ### Timed auction (ERC-20)
+
+  **Winning bid:** 2,500 USDC  
+  **Collection royalty:** 0% (royalty-free collection)
+
+  **Breakdown**
+  - Marketplace fee (2.5%): 62.5 USDC  
+    - → Reward Distributor (1.5%): 37.5 USDC  
+    - → Panthart (1.0%): 25.0 USDC
+  - Creator royalty: 0 USDC
+  - **Seller receives:** 2,500 − 62.5 = **2,437.5 USDC**
+  </Tabs.Tab>
+
+</Tabs>
+
+> For quick what-if math on any amount, use the **Fee Calculator** on the docs homepage.
+
+---
+
+## Creation fee (minting via Panthart)
+
+When creators launch through Panthart, a small **creation fee** may apply.
+
+This covers:
+- **IPFS pinning & bandwidth** for media/metadata (automatic CID wiring so JSON always points to the final pinned files)
+- **Convenience services** that streamline setup for non-technical creators (uploads, validation, guardrails)
+
+**How it’s charged**
+- The creation fee is **separate** from marketplace and royalty fees, and is paid at **creation time** (not at sale).
+- It’s **clearly shown in the UI** before you confirm. The currency and amount are exactly what you’ll sign for.
+- Depending on the flow, the fee may be assessed **per collection** (e.g., a 721 Drop) or **per item** (e.g., single 721/1155).
+
+**Pricing policy**
+- Creation fees are **not fixed**; they can change with **market conditions** (e.g., storage costs, network fees) or **service improvements**.
+- We periodically **review and update** the fee schedule. Any change is reflected **in-product** prior to confirmation—no surprises.
+- If a promotion or grant covers your fee, the UI will show **0** at confirmation.
+
+---
+
+## Multi-currency behavior
+
+- **Listing currency = settlement currency.** Fees, royalties, and seller proceeds are computed and paid in the listing/bid token (ETN or the selected ERC-20).
+- **Approvals:** First-time use of an ERC-20 requires a standard **approve** call for the marketplace contract; after that, settlements proceed with a single transaction.
+- **Creation fee currency:** It’s charged in the **currency displayed in the creation flow**. If the flow supports multiple tokens, choose the one you prefer before confirming.
+
+---
+
+## Edge cases & notes
+
+- **Zero-royalty collections:** Only the 2.5% marketplace fee is taken; the seller receives the rest.  
+- **Edits/relists:** Changing price/currency typically requires a relist; payout math still follows the rules above.  
+- **Auctions with reserve:** If the reserve isn’t met, no sale occurs and no fees/royalties are taken.  
+- **Rounding:** Minor rounding may occur according to the token’s decimals; contracts round consistently.
+
+<Callout type="warning">
+Always verify the <strong>spender</strong> (for ERC-20 approvals) and the <strong>contract addresses</strong> you interact with. See **References → <a href="/references/contract-addresses">Contract Addresses</a>** for the canonical list.
+</Callout>
+
+---
+
+## FAQ
+
+**Do royalties apply to both fixed-price and auctions?**  
+Yes. If the collection’s royalty policy is set, it applies to any successful sale.
+
+**Can a buyer “skip” royalties?**  
+No. Payouts are enforced by the settlement contract. If a sale matches the policy, the royalty is paid automatically.
+
+**Where do the 1.5% rewards go?**  
+Into the **Reward Distributor** contract, which distributes to **Non-Fungible Comrades** holders pro-rata.
+
+**Are royalties taken before or after fees?**  
+The marketplace fee (2.5%) is taken from the sale price, then creator royalties (if configured) are paid. The remainder goes to the seller.
+
+---
+
+## Related
+
+- **Collectors → <a href="/collectors/buying-bidding">Buying & Bidding</a>** — flows, currencies, wallet prompts  
+- **Collectors → <a href="/collectors/transfers-escrow">Transfers & Escrow</a>** — atomic settlement & refunds  
+- **Creators → <a href="/creators/media-metadata">Media & Metadata</a>** — preparing assets & JSON  
+- **References → <a href="/references/contract-addresses">Contract Addresses</a>** — official addresses to verify on the explorer

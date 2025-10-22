@@ -1,0 +1,58 @@
+import { Tabs } from 'nextra/components' 
+
+export const metadata = { title: 'Create' }
+
+# Create
+
+Compare the three minting options. Pick a tab to see steps, then jump into a detailed page.
+
+<Tabs items={['Collection (721 Drop)', 'Single 721', 'Single 1155']}>
+
+  <Tabs.Tab>
+  ## Collection (ERC-721 Drop)
+
+  **Best for**: large sets, allowlists/presales, phased releases.  
+  **Highlights**: supply cap, presale window, public mint, reveal.
+
+  **Steps**
+  1. Configure name/symbol/max supply  
+  2. Set base URI (placeholder if doing a reveal)  
+  3. Configure allowlist/presale (optional)  
+  4. Open public mint (price, per-wallet cap, schedule)  
+  5. Reveal: switch URI placeholder → final artwork
+
+  **Go deeper →** [/creators/create-nft/erc721-drop](/creators/create-nft/erc721-drop)
+  </Tabs.Tab>
+
+  <Tabs.Tab>
+  ## Single NFT (ERC-721)
+
+  **Best for**: a true 1/1 artwork with unique metadata.  
+  **Highlights**: one-of-one provenance, immediate listing/auction.
+
+  **Steps**
+  1. Upload media + author metadata (name, description, attributes)  
+  2. Pay creation fee (IPFS + service)  
+  3. Mint to your wallet  
+  4. List at fixed price or start an auction
+
+  **Go deeper →** [/creators/create-nft/erc721-single](/creators/create-nft/erc721-single)
+  </Tabs.Tab>
+
+  <Tabs.Tab>
+  ## Single (ERC-1155)
+
+  **Best for**: editions (passes, merch, game items) with shared metadata.  
+  **Highlights**: set total supply, flexible distribution.
+
+  **Steps**
+  1. Upload media + shared metadata  
+  2. Set total supply (editions)  
+  3. Pay creation fee (IPFS + service)  
+  4. Mint initial supply or enable public mint  
+  5. List editions individually or as a lot
+
+  **Go deeper →** [/creators/create-nft/erc1155-single](/creators/create-nft/erc1155-single)
+  </Tabs.Tab>
+
+</Tabs>

@@ -1,0 +1,102 @@
+export const metadata = { title: 'Profile' }
+
+# Profile
+
+Your profile is your hub: identity, portfolio, rewards, and balances—fully non-custodial and on-chain.
+
+> **Heads-up:** Connect a wallet on **Electroneum EVM** to unlock profile editing, rewards, and withdrawals.
+
+---
+
+## Identity
+
+Customize your public presence:
+
+- **Username** — set a human-readable handle (unique).  
+- **Avatar** — square image, tuned for dark/light themes.  
+- **Banner** — wide cover image for your profile header.  
+- **Bio & links** — add a short bio and optional links (website, Telegram, X).
+
+> Your wallet remains the owner of the profile. Switching wallets shows the connected wallet’s profile.
+
+---
+
+## Portfolio
+
+Everything you own and list in one place:
+
+- **Owned NFTs** — filter by **ERC-721** / **ERC-1155**, collection, and status.  
+- **On sale** — items you’ve listed at fixed price, with quick “Edit / Cancel” actions.  
+- **Multi-currency** — pricing token visible on each listing (ETN or approved ERC-20).
+
+**Browse fixed-price:** [panth.art/listings](https://panth.art/listings)
+
+---
+
+## Rewards (Non-Fungible Comrades)
+
+If you hold **Non-Fungible Comrades**, your profile shows a **Rewards** panel:
+
+- **Accrued rewards** — your pro-rata share of the **1.5%** marketplace fee pool.  
+- **Distribution history** — past payouts with on-chain tx links.  
+- **Eligibility** — snapshot logic is automatic; holding more Comrades increases your share.
+
+> Rewards are routed by the **Reward Distributor** contract and remain fully on-chain for transparency.
+
+---
+
+## Balances & Withdrawals
+
+All balances related to auctions and offers, in one place:
+
+- **Auction refunds** — if you’re **outbid**, your escrowed amount becomes withdrawable here (auto-released by contract; the panel surfaces it immediately).  
+- **Offer escrow** — cancel an open offer to release escrow; settled/expired offers show their final state.  
+- **Token approvals** — see which ERC-20 tokens you’ve approved for spending and revoke in your wallet if needed.
+
+**Tip:** For performance, balances may cache for a few seconds—refresh if you just completed a transaction.
+
+---
+
+## Selling quick actions
+
+From your profile you can:
+
+- **List** an owned NFT at fixed price.  
+- **Start an auction** with reserve price and duration.  
+- **Batch-list** (where supported) for multiple editions of an **ERC-1155**.
+
+> Fees are settled at sale: **2.5% marketplace** (1.5% → reward pool, 1% → Panthart), plus any creator royalty configured by the collection.
+
+---
+
+## Settings & Security
+
+- **Connected wallet** — displays the active address and chain.  
+- **Session safety** — the UI never asks for a seed phrase. If any site does, leave immediately.  
+- **Approvals** — first-time ERC-20 spend requires a one-time **approve**. Always verify the **spender** is the official marketplace contract (see **References → Contract Addresses**).
+
+---
+
+## Notifications (optional)
+
+- **In-app toasts** — purchases completed, bids placed/outbid/won, listing updates.  
+- **Telegram/X** — follow announcements and AMAs for feature launches and maintenance windows.
+
+See **About → Contact** for public channels and how to reach admins securely.
+
+---
+
+## Troubleshooting
+
+- **“Can’t edit profile.”** Make sure your wallet is connected to **Electroneum EVM** and the site can read your address.  
+- **“My bid refund isn’t visible yet.”** It’s auto-released by the contract when you’re outbid. If your wallet UI lags, refresh; then check **Balances & Withdrawals**.  
+- **“Approval keeps popping up.”** You’re switching tokens/currency. Approvals are **per token**; approve once per ERC-20.  
+- **“Wrong currency on a listing.”** Listings show the pricing token—switch your checkout currency to match.
+
+---
+
+## Related
+
+- **Collectors → Buying & Bidding** — flows, currencies, and wallet prompts.  
+- **References → Contract Addresses** — official marketplace & distributor contracts.  
+- **Developers → ABIs** — for explorers and advanced users.

@@ -1,0 +1,109 @@
+import { Tabs, Callout } from 'nextra/components'
+
+export const metadata = { title: 'Buying & Bidding' }
+
+# Buying & Bidding
+
+<Callout type="warning">
+Verify you’re on **Electroneum EVM** and using official contracts from  
+**References → [Contract Addresses](/references/contract-addresses)**.  
+If a wallet prompt shows an unexpected **spender** or **contract**, **cancel**.
+</Callout>
+
+Buying on Panthart is non-custodial: your wallet signs, the marketplace settles on-chain,
+and transfers/fees/royalties are performed atomically.
+
+---
+
+## Currencies & approvals
+
+Panthart supports **ETN** (native) and selected **ERC-20** tokens.
+
+- **ETN:** pay directly; confirm the single purchase/bid tx.
+- **ERC-20:** the first time you use a token, your wallet asks to **approve** the marketplace as spender  
+  (one-time allowance per token), then you confirm the buy/bid.
+
+> You can switch currency before confirming. If a listing is priced in a specific token, the UI will ask you to use it.
+
+---
+
+## Flows
+
+<Tabs items={['Fixed price', 'Auctions']}>
+
+  <Tabs.Tab>
+  ## Fixed price (instant buy)
+
+  1. Open the item → review **metadata**, **royalty note**, and **currency**.  
+  2. Click **Buy now**. If using an ERC-20 for the first time, confirm the **approval**; then confirm the **purchase**.  
+  3. Settlement executes atomically:
+     - NFT transfers to your wallet  
+     - Seller proceeds + creator royalty (if any) are paid  
+     - **2.5%** marketplace fee is collected (**1.5% → Reward Distributor**, **1% → Panthart**)
+
+  **Browse fixed-price:** [panth.art/listings](https://panth.art/listings)
+
+  <Callout>
+    **ERC-1155 editions:** when available, select **quantity** before buying. Per-wallet caps (if set) are enforced.
+  </Callout>
+  </Tabs.Tab>
+
+  <Tabs.Tab>
+  ## Auctions (timed, on-chain)
+
+  - **Format:** English-style timed auctions with on-chain min increment and optional anti-sniping extension.  
+  - **Place a bid:** value ≥ current bid + min increment (and ≥ reserve if set).  
+  - **Escrow:** your bid is escrowed in the marketplace contract; if outbid, it’s **released automatically**.  
+  - **Win:** when the timer ends, settlement transfers the NFT and distributes funds/fees atomically.
+
+  **Bid now:** [panth.art/auction](https://panth.art/auction)
+  </Tabs.Tab>
+
+</Tabs>
+
+---
+
+## What you’ll see in wallet prompts
+
+- **Buy now:** a single **contract call** with the total in your chosen currency.  
+- **First-time ERC-20:** an **approve** call (spender = marketplace contract), then the buy/bid call.  
+- **Auction bid:** a **bid** call that escrows the amount.  
+- **Outbid release:** automatic; no signature required.
+
+---
+
+## Fees, royalties, and rewards
+
+- **Marketplace fee:** **2.5%** of the final sale  
+  - **1.5% → Reward Distributor** (to Non-Fungible Comrades holders)  
+  - **1% → Panthart fee wallet**
+- **Royalties (optional):** honored per collection policy at settlement time.  
+- **Gas:** low on Electroneum EVM; paid by the actor who triggers the action (buyer for buy/bid, seller for list/cancel).
+
+> For exact numbers on any trade amount, use the **Fee Calculator** on the docs homepage.
+
+---
+
+## Quick links
+
+- **Browse collections:** [panth.art/collections](https://panth.art/collections)  
+- **Live auctions:** [panth.art/auction](https://panth.art/auction)  
+- **On sale (fixed price):** [panth.art/on-sale](https://panth.art/listings)
+
+---
+
+## Safety checklist
+
+- Match contract addresses with **References → [Contract Addresses](/references/contract-addresses)**.  
+- For ERC-20 approvals, confirm the **spender** is the marketplace contract.  
+- Prefer **verified collections** and inspect the explorer link on the item page.  
+- Never share seed phrases or sign blind messages in DMs.
+
+---
+
+## Troubleshooting
+
+**“Insufficient funds / gas.”** Top up ETN or the selected ERC-20 and retry.  
+**“Approval required / failed.”** Approve the token once; if it fails, check allowance in your wallet, then try again.  
+**“Tx pending.”** Open the tx from the item page and wait for finality; some wallets let you bump fee.  
+**“Currency mismatch.”** Listings show pricing currency; switch your checkout token or filter by token on marketplace pages.
