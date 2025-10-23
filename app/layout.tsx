@@ -8,7 +8,7 @@ import { FaTelegram } from 'react-icons/fa6'
 export const metadata = {
   title: 'Panthart Documentation',
   description: 'Official documentation for the Panthart NFT marketplace',
-  metadataBase: new URL('http://localhost:3000'), 
+  metadataBase: new URL('https://panthart-docs.vercel.app'), 
   openGraph: {
     title: 'Panthart Documentation',
     images: ['/og-image.png'],
