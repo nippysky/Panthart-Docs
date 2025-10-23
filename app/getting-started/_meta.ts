@@ -1,7 +1,6 @@
-{
-  "": "Getting Started",
+export default {
   "overview": "Overview",
-  "networks-and-wallets": "Networks & Wallets",
   "quickstart-install": "Quickstart Installation",
+  "networks-and-wallets": "Networks & Wallets",
   "glossary": "Glossary"
 }

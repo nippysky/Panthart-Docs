@@ -1,31 +1,90 @@
 import { Callout, Steps } from 'nextra/components'
 
-export const metadata = { title: 'Single NFT (ERC-721)' }
+export const metadata = { title: 'Single NFT (ERC-721 1/1)' }
 
-# Single NFT (ERC-721)
+# Single NFT (ERC-721 1/1)
 
-**Best for:** a true 1/1 with unique metadata.
+A **true 1/1**: one contract, one token, one URI. Mint happens during initialization and token ID is **1**.
 
-<Callout type="info">
-Provide a **preview image** for fast loading and include full-res media via `image` or `animation_url` on IPFS.
+---
+
+## Pre-flight checklist (what the UI validates)
+
+- **Name & Symbol**: required, human-readable.
+- **Token URI**: a single, final metadata URL (e.g. `ipfs://<CID>/meta.json`).  
+  This contract **does not use a base URI** or numbered token paths.
+- **Royalties (ERC-2981)**: recipient is non-zero and BPS ≤ **1000** (10%). Immutable after deploy.
+- **Platform fee**: exact `feeAmount` in the chain’s native coin is forwarded at initialization.
+- **Owner wallet**: injected by the **NFTFactory**; receives token **#1** at init.
+
+<Callout type="info" emoji="🧩">
+The 1/1 contract mints exactly one token during <code>initialize</code>. There is no presale/public sale, no per-wallet limits, and no further minting.
 </Callout>
 
+---
+
+## What the contract does (tl;dr)
+
+- **Cloneable** (EIP-1167) via **NFTFactory**; sets owner and forwards the platform fee.
+- **Mints token #1** to the owner on <code>initialize</code> and pins its <code>tokenURI</code>.
+- **Immutable royalties** via ERC-2981 (set once at init).
+- **Withdraw** helper for any stray native coin left on the contract.
+
+---
+
+## Metadata shape (example)
+
+```json
+{
+  "name": "Panthart Genesis 1/1",
+  "description": "A unique 1/1 artwork minted via Panthart.",
+  "image": "ipfs://bafy.../image.png",
+  "animation_url": "ipfs://bafy.../video.mp4",
+  "attributes": [
+    { "trait_type": "Edition", "value": "1/1" },
+    { "trait_type": "Artist", "value": "Panth" }
+  ]
+}
+```
+
+<Callout type="warning" emoji="🔒"> Treat your metadata as <strong>final</strong>. Changing it after listing can hurt collector trust. </Callout>
+
+---
+
+### Step-by-step
 <Steps>
+1) Prepare the metadata
 
-### Prepare metadata
-`name`, `description`, `image` (or `animation_url`), `attributes`.
+Upload your JSON and media to IPFS (or another permanent store). Verify the file resolves quickly.
 
-### Creation
-Pay the **creation fee** (covers IPFS + service). Confirm wallet prompts.
+2) Initialize via Factory
 
-### Mint
-Confirm mint to your wallet; provenance begins at block inclusion.
+Enter Name, Symbol, Token URI, Royalty recipient + BPS, and confirm the platform fee transaction.
+On success, the contract emits <code>SingleInitialized</code> and immediately mints token #1 to you (emits <code>SingleMinted</code>).
 
-### Sell
-Create a **fixed-price** listing or start an **auction**.
+3) Verify & showcase
+
+Open the token page. Ensure the image/animation loads from your Token URI and traits render as intended.
+
+4) List for sale (optional)
+
+Create a fixed-price listing or start an auction on the marketplace.
 
 </Steps>
 
-<Callout type="warning">
-Edits after reveal can harm collector trust. Treat metadata as **immutable** after listing.
-</Callout>
+---
+
+### Reference (functions & events)
+
+Init
+`initialize(SingleConfig cfg)` — payable; sets royalties, forwards fee, mints token #1 to owner.
+
+Views
+`tokenURI(uint256 tokenId)` → `string (reverts unless tokenId == 1)` ·
+`supportsInterface(bytes4)` → `bool (ERC-721 + ERC-2981)`
+
+Admin
+`withdraw(address payable to`) — owner only (withdraw any residual native coin)
+
+Events
+`SingleInitialized(owner, name, symbol)` · `SingleMinted(to, tokenId, uri)`

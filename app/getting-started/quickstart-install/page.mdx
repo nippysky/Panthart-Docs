@@ -1,33 +1,119 @@
 import { Callout, Steps } from 'nextra/components'
+import DocsCards from 'components/DocsCard'
 
 export const metadata = { title: 'Quickstart' }
 
 # Quickstart
 
 <Callout type="info">
-Panthart runs on **Electroneum EVM**. Make sure your wallet is on the correct network.
+Panthart runs on <strong>Electroneum EVM</strong>. Confirm your wallet network and verify contract addresses in
+<strong> References → <a href="/references/contract-addresses">Contract Addresses</a></strong> before signing anything.
 </Callout>
+
+---
+
+## 5-minute flow
 
 <Steps>
 
-### Install a wallet
-Use **MetaMask** (or compatible EVM wallet).
+### 1) Install a wallet
+Use <strong>MetaMask</strong> or another EVM-compatible wallet (Ledger/Trezor via MetaMask also works).
 
-### Connect
-Open Panthart, click **Connect Wallet**, approve in your wallet.
+### 2) Connect
+Open Panthart and click <em>Connect Wallet</em>. Your wallet may prompt to switch to <strong>Electroneum EVM</strong>.
 
-### Try a read-only action
-Open any collection or item page to validate network & indexing.
+### 3) Sanity-check (read-only)
+Visit a collection or item page to ensure UI data loads for you (no signing required).  
+This confirms RPC/indexing are healthy for your connection.
 
-### Mint (optional)
-Follow **Create** to mint: 721 Drop / Single 721 / Single 1155.  
-Creation includes a fee that covers **IPFS + service**, plus normal gas.
+### 4) Mint (creators)
+Choose a flow: <strong>721 Drop</strong>, <strong>Single 721</strong>, or <strong>Single 1155</strong>.  
+Upload media + metadata. A small <strong>creation fee</strong> covers IPFS pinning/service; normal network <strong>gas</strong> applies.
 
-### List for sale
-Set fixed price or start an auction; approve marketplace (first time).
+### 5) List for sale
+Pick <em>Fixed Price</em> or <em>Auction</em>. First time, your wallet will request a one-time <code>approve</code> for the marketplace (and for any ERC-20 you list in).
 
 </Steps>
 
-<Callout type="warning">
-If a transaction fails, confirm you’re on Electroneum, have sufficient gas, and no pending nonce conflicts.
+---
+
+## What to expect (UX cheatsheet)
+
+- <strong>Listings & auctions:</strong> Settlement is non-custodial and atomic: fees/royalties route to recipients; NFT and proceeds exchange in one transaction.  
+- <strong>Multi-currency:</strong> Listing currency = settlement currency (ETN or supported ERC-20).  
+- <strong>Royalties:</strong> Honored at settlement when the collection defines a royalty policy.  
+- <strong>Rewards:</strong> 1.5% of each sale flows to the <em>Reward Distributor</em> for Non-Fungible Comrades holders.
+
+<Callout>
+First-time ERC-20 usage requires <code>approve</code>. You can revoke approvals later from your wallet if desired.
 </Callout>
+
+---
+
+## Jump right in
+
+<DocsCards
+  items={[
+    {
+      title: 'Create: 721 Drop',
+      desc: 'Allowlist/presale + public mint with optional reveal.',
+      href: '/creators/create-nft/erc721-drop',
+      badge: 'Creators'
+    },
+    {
+      title: 'Create: Single 721',
+      desc: 'True 1/1 artwork with unique metadata.',
+      href: '/creators/create-nft/erc721-single',
+      badge: 'Creators'
+    },
+    {
+      title: 'Create: Single 1155',
+      desc: 'One token, many editions—passes, merch, game items.',
+      href: '/creators/create-nft/erc1155-single',
+      badge: 'Creators'
+    },
+    {
+      title: 'Buying & Bidding',
+      desc: 'Fixed-price purchases and timed auctions.',
+      href: '/collectors/buying-and-bidding',
+      badge: 'Collectors'
+    },
+    {
+      title: 'Transfers & Escrow',
+      desc: 'How custody, settlement, refunds, and safety work.',
+      href: '/collectors/transfers-and-escrow',
+      badge: 'Collectors'
+    },
+    {
+      title: 'Fees & Rewards',
+      desc: '2.5% fee split, royalties, creation fee, multi-currency.',
+      href: '/governance-and-policies/fees-schedule',
+      badge: 'Policies'
+    }
+  ]}
+/>
+
+---
+
+## Troubleshooting
+
+<Callout type="warning">
+If a transaction fails, check:<br/>
+• Network = <strong>Electroneum EVM</strong><br/>
+• Sufficient gas balance in the right token<br/>
+• No pending nonce conflicts (speed up / cancel stuck tx)<br/>
+• Spender/contract addresses match <a href="/references/contract-addresses">Contract Addresses</a>
+</Callout>
+
+- <strong>Approval loops:</strong> Your wallet may ask for an ERC-20 approval the first time you list in that token. This is normal—approve once, then list.  
+- <strong>Indexer lag:</strong> A fresh mint/list may take a short moment to appear in all views; on-chain state is the source of truth.  
+- <strong>Revoking approvals:</strong> You can revoke old spend allowances from your wallet’s token approval manager whenever you like.
+
+---
+
+## Related
+
+- <a href="/getting-started">Getting Started</a> — broader orientation  
+- <a href="/collectors/buying-bidding">Buying & Bidding</a> — fixed price & auctions  
+- <a href="/creators/media-metadata">Media & Metadata</a> — best-practice JSON & assets  
+- <a href="/governance-and-policies/security-and-disclosure">Security & Disclosure</a> — report issues responsibly

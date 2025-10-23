@@ -1,32 +1,104 @@
+import { Callout } from 'nextra/components'
+
+export const metadata = { title: 'Terms and Conditions' }
+
 # Terms and Conditions
 
 _Last updated: 2025-10-21_
 
 These Terms govern your access to and use of the **Panthart** marketplace (the “Service”). By accessing or using the Service, you agree to these Terms.
 
-## 1. Eligibility
-You must have legal capacity to enter into these Terms and comply with applicable laws in your jurisdiction.
+---
 
-## 2. Non-custodial Service
-Panthart is a UI that interacts with smart contracts. You are responsible for safeguarding your wallet and private keys.
+## 1. Eligibility & Acceptance
+- You must have the legal capacity to enter into these Terms and comply with the laws of your jurisdiction.  
+- By connecting a wallet or interacting with any Panthart smart contract, you accept these Terms.
 
-## 3. Fees
-A **2.5%** fee applies to secondary sales; **1.5%** funds a reward distributor for Non-Fungible Comrades holders and **1%** goes to the Panthart fee wallet. Creation fees apply to cover IPFS hosting and related services.
+## 2. Non-Custodial Service & Wallet Responsibility
+- Panthart is a UI that surfaces actions on **non-custodial** smart contracts.  
+- You control your wallet and private keys. **You are solely responsible** for safeguarding them and for all on-chain actions taken by your address.  
+- Lost keys, seed phrases, or mis-signed transactions cannot be reversed by Panthart.
 
-## 4. Content & IPFS
-You are responsible for the content you upload. IPFS pinning is provided on a best-effort basis; availability is not guaranteed.
+<Callout type="warning">
+All on-chain transactions are final once confirmed. Always verify contract addresses and spenders before approving.
+</Callout>
+
+## 3. Fees & Pricing
+- **Marketplace fee:** **2.5%** of each secondary sale. Of this, **1.5%** is routed to the **Reward Distributor** for Non-Fungible Comrades holders and **1%** to the Panthart fee wallet.  
+- **Creation fee:** may apply for creator workflows and covers IPFS pinning/bandwidth and convenience services. Creation fees are displayed in-product **before** confirmation, are **separate** from marketplace and royalty fees, and are paid at creation time.  
+- **Dynamic pricing:** Fees are **not fixed** and may change over time due to market conditions, network costs, or service improvements. Changes are reflected in the UI prior to confirmation.
+
+## 4. Multi-Currency & Gas
+- Listings and settlements occur in the **listing currency** (ETN or supported ERC-20).  
+- Network **gas fees** are paid by you to miners/validators and are **non-refundable**.  
+- Failed or reverted transactions may still consume gas.
 
 ## 5. Royalties
-Royalties are honored by the marketplace contracts where supported; they are not guaranteed chain-wide.
+- Where a collection has a royalty policy, royalties are honored by the marketplace contracts during settlement.  
+- Royalties on other marketplaces or peer-to-peer transfers are outside Panthart’s control and are **not guaranteed chain-wide**.
 
-## 6. Prohibited Activities
-No illegal content, fraudulent activity, market manipulation, or infringement.
+## 6. Content, Metadata & IPFS
+- You are responsible for **all content** you upload or pin (media, metadata, descriptions, links).  
+- IPFS pinning is provided on a **best-effort** basis; long-term availability is not guaranteed.  
+- You represent that your content does not infringe others’ rights and complies with applicable law.
 
-## 7. No Warranty; Limitation of Liability
-The Service is provided “as is.” To the maximum extent permitted by law, Panthart disclaims warranties and limits liability.
+<Callout type="info">
+Immutable, content-addressed URIs (CIDs) improve provenance but do not guarantee perpetual availability or legal compliance.
+</Callout>
 
-## 8. Changes
-We may modify these Terms. Continued use after changes constitutes acceptance.
+## 7. Prohibited Activities
+You agree **not** to use Panthart for:
+- Illegal content or activity; infringement; defamation; malicious code.  
+- Market manipulation, wash trading, spoofing, front-running, or sybil abuse.  
+- Circumventing royalties or protocol fees through deceitful means.  
+- Attempts to breach, overload, or interfere with the Service or its smart contracts.
 
-## 9. Contact
-legal@yourdomain.tld
+Panthart may restrict UI access or take other reasonable measures to protect users and the protocol.
+
+## 8. Smart-Contract & Protocol Risks
+- Smart contracts can contain bugs, be upgraded, paused, or replaced subject to protocol governance.  
+- Chain reorganizations, RPC outages, indexer delays, or third-party service failures can affect UI state (but not on-chain truth).  
+- You acknowledge these risks and agree that you **use the Service at your own risk**.
+
+## 9. No Warranty; Limitation of Liability
+- The Service is provided **“as is” and “as available”** without warranties of any kind, express or implied.  
+- To the maximum extent permitted by law, Panthart disclaims liability for indirect, incidental, special, consequential, or punitive damages, or any loss of profits, data, or goodwill.  
+- In all cases, Panthart’s aggregate liability shall not exceed the greater of (a) the amounts you paid to Panthart for the Service in the 3 months preceding the claim, or (b) USD $100.
+
+## 10. Taxes
+- You are responsible for any **taxes** arising from your use of the Service, including sales, use, VAT, income, or other applicable taxes.
+
+## 11. Takedowns & Complaints
+- If you believe content infringes your rights or violates law, request moderation by contacting us via the official channels listed in **Section 14** with supporting information (links, token IDs, proofs).  
+- Panthart may remove or limit UI access to reported content where appropriate. On-chain data is not erasable by Panthart.
+
+## 12. Third-Party Services
+- The Service may link to or rely on third parties (wallet providers, RPCs, IPFS pinning, Cloudinary, etc.). Panthart is **not responsible** for third-party services and does not control their availability or terms.
+
+## 13. Changes to the Service & Terms
+- Panthart may update features, fees, or policies to improve the Service or respond to market and security conditions.  
+- Panthart may modify these Terms; continued use after changes constitutes acceptance. The “Last updated” date will reflect the most recent revision.
+
+## 14. Contact & Support
+For support, security disclosures, or takedown requests, reach us through our official channels:
+- **Telegram:** https://t.me/DecentroneumGroupChat  
+- **X (Twitter):** https://x.com/decentroneum
+
+> Do **not** share seed phrases or private keys. We will never ask for them.
+
+## 15. Governing Law; Disputes
+- These Terms are governed by applicable law determined by Panthart’s place of operation, unless mandatory law provides otherwise.  
+- Any dispute shall be resolved in a competent court of that venue, unless the parties agree to alternative dispute resolution. You and Panthart agree to pursue good-faith resolution prior to filing.
+
+## 16. Termination
+- You may stop using the UI at any time. On-chain contracts remain accessible via other interfaces.  
+- Panthart may suspend or restrict UI access for violations of these Terms or to protect users and the protocol.
+
+## 17. Miscellaneous
+- **Severability:** If any provision is unenforceable, the remainder remains in effect.  
+- **No waiver:** Failure to enforce a provision is not a waiver.  
+- **Entire agreement:** These Terms constitute the entire agreement between you and Panthart regarding the Service.
+
+---
+
+By continuing to use Panthart, you acknowledge these Terms and agree to act responsibly on-chain and in our community.

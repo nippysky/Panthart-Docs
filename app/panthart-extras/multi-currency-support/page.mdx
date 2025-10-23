@@ -1,0 +1,132 @@
+import { Callout, Steps } from 'nextra/components'
+
+export const metadata = { title: 'Multi-Currency Trading' }
+
+# Multi-Currency Trading (Token Integrations)
+
+Enable your community to trade on Panthart using **your own ERC-20 token**, alongside native **ETN**.  
+Panthart’s marketplace is built with a currency whitelist—once approved, your token becomes selectable in **Listings** and **Auctions** across the app.
+
+---
+
+## Status & pricing
+
+- **Available today:** **ETN (native)** only.  
+- **Coming soon:** third-party **ERC-20** tokens via integration requests.
+- **One-time integration fee:** **$2,500 worth of DCNT** (Panthart’s native token) — payable **after DCNT launch**.
+
+<Callout type="warning" emoji="⏳">
+Until DCNT is launched, token integration requests are **wait-listed**. You can submit interest, but payment and activation happen **post-launch**.
+</Callout>
+
+---
+
+## What “integration” means (under the hood)
+
+Panthart’s marketplace contract maintains a **currency allowlist**:
+- `currencyAllowed[address(0)] = true` → **ETN** is always supported.
+- Additional **ERC-20** tokens are toggled **on/off** by Panthart ops.
+
+Once your ERC-20 is allowed:
+- **Listings** can be created with your token as the settlement currency.
+- **Auctions** can accept bids in your token, with min increments and **snipe extension** logic maintained.
+- **Royalties (ERC-2981)**, **market fees**, and **seller proceeds** are paid in the **same currency** (native or ERC-20).
+- If a payout transfer fails (e.g., ERC-20 returns `false`), the contract credits the recipient’s **balance** for later withdrawal.
+
+<Callout type="info" emoji="🧩">
+For native ETN, buyers send value via <code>msg.value</code>.  
+For ERC-20, buyers approve and the contract pulls funds via <code>transferFrom</code>.
+</Callout>
+
+---
+
+## How trades settle (quick primer)
+
+- **Royalties:** If the collection supports ERC-2981, the contract pays the creator’s royalty in the **listing currency**.
+- **Marketplace fee:** a % of sale price (configurable, capped at 10%). Part of that fee is routed to a **rewards distributor**.
+- **Seller proceeds:** Sale price − royalty − fee, paid in the same currency.
+- **Anti-sniping (auctions):** last-minute bids extend the auction by a few minutes (configurable “snipe extension”).
+
+<Callout type="warning" emoji="🛡️">
+Panthart checks a **stolen asset registry** before allowing sales or settlement. Flagged tokens cannot be traded.
+</Callout>
+
+---
+
+## Integration requirements
+
+- Your token is an **ERC-20** deployed on the same EVM network as Panthart.
+- Contract behaves per standard (`transfer`, `transferFrom` returning `bool` or empty success data).
+- No fee-on-transfer behavior that would break exact accounting (if present, disclose during review).
+- Team wallet able to pay **$2,500 worth of DCNT** (one-time) **after DCNT launch**.
+- You agree to brand and listing guidelines to avoid user confusion.
+
+---
+
+## Submit your token (post-launch flow)
+
+<Steps>
+
+### 1) Request integration
+Provide token contract address, token name/symbol, decimals, links (site, docs, audit if any), and primary contact.
+
+### 2) Technical & policy review
+We validate standard ERC-20 behavior and run marketplace compatibility checks.
+
+### 3) Pay the one-time fee (DCNT)
+After DCNT is live, settle **$2,500 worth of DCNT** to the integration address shown in the UI.
+
+### 4) Allowlist & go-live
+Panthart toggles your token **allowed**. Creators can now choose it for **Listings** and **Auctions**.
+
+### 5) Educate your community
+Share a short guide: approving spend (for buyers), choosing currency (for sellers), and how royalties/fees settle in-currency.
+
+</Steps>
+
+---
+
+## Using your token on the marketplace
+
+**For sellers**
+- When creating a listing/auction, pick your token in **Currency**.
+- Set price/start price in **token units**.
+- For ERC-1155, quantity must be > 0; for ERC-721, quantity is always 1.
+- If you cancel or an auction ends with no winner, assets are returned from escrow.
+
+**For buyers/bidders**
+- **ETN**: send `msg.value == price` (listings) or ≥ required bid (auctions).
+- **ERC-20**: approve the marketplace for the **exact amount** then purchase/bid.
+- If outbid in an ERC-20 auction, your previous bid is added to your **credits** for withdrawal.
+
+
+---
+
+## FAQ
+
+**Can we integrate before DCNT launches?**  
+No. You can **register interest**, but activation happens **after** DCNT goes live and the fee can be paid.
+
+**Where is the fee stored and how is value calculated?**  
+Panthart admin after reach out will use prevailing market value of the DCNT amount equivalent to **$2,500** at the time of payment and provide the settlement address.
+
+**Can we change or remove our token later?**  
+Panthart can disable a token (e.g., security concerns). Existing orders/auctions will be respected or canceled per policy.
+
+
+**Are royalties paid in our token too?**  
+Yes—royalties, marketplace fees, and seller proceeds all settle in the **listing currency**.
+
+---
+
+## Quick reference
+
+- **Today:** ETN only.  
+- **Post-launch:** ERC-20 integrations via one-time **$2,500 DCNT** fee.  
+- **Allowlist switch:** Token becomes selectable for listings/auctions.  
+- **Settlement:** All payouts happen in the chosen currency; credits used if transfers fail.  
+- **Safety:** Stolen registry checks; auction anti-sniping.
+
+<Callout type="info" emoji="🚀">
+Want your token ready on day one? Submit your details now to join the **integration wait-list**. We’ll notify you the moment DCNT goes live.
+</Callout>

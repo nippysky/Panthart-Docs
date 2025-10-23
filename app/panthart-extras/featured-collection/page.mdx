@@ -1,0 +1,120 @@
+import { Callout, Steps } from 'nextra/components'
+
+export const metadata = { title: 'Feature Your Collection' }
+
+# Feature Your Collection (Bidding)
+
+Boost visibility across Panthart by winning the **Featured Collection** slot.  
+Creators place **bids** to secure the next 28-day feature window. Highest bid at cycle end wins, and a new cycle starts immediately.
+
+---
+
+## How it works (overview)
+
+- **Cycle length:** 28 days per feature window.
+- **Eligibility:** you must be the **owner** of the collection (the connected wallet must own/deploy it).
+- **Bidding:** start at the **minimum bid**; each new bid must be **strictly higher** than the current highest.
+- **Top-ups:** you may **add** to your existing bid at any time to take the lead.
+- **Winner selection:** when a cycle ends, the **highest bidder** is automatically featured across Panthart.
+- **Auto-rollover:** a new 28-day cycle opens **immediately** after a winner is locked.
+- **No-bid fallback:** if a cycle ends with **no bids**, the **Non-Fungible Comrades** collection is featured by default.
+
+<Callout type="info" emoji="🧭">
+“Feature” placement includes prominent spots across marketplace surfaces (home, explore, search highlights—and other curated rails as available). Exact placements may evolve, but the winner remains consistently highlighted for the entire 28-day period.
+</Callout>
+
+---
+
+## Pre-flight checklist
+
+- ✅ Connected wallet matches the **collection owner**.  
+- ✅ Collection is **submitted** (select from your owned collections).  
+- ✅ You can meet or exceed the **minimum bid** for the current cycle.  
+- ✅ You understand the **cycle end time** and that a **higher** bid may overtake you before the deadline.
+
+<Callout type="warning" emoji="⚠️">
+Each new bid must be **greater than** the standing highest bid. If you’re outbid, your bid remains recorded for the cycle unless you top up again.
+</Callout>
+
+---
+
+## Step-by-step
+
+<Steps>
+
+### 1) Connect & verify ownership
+Connect your wallet. Pick a collection you **own**. The UI validates ownership before enabling bidding.
+
+### 2) Submit collection & place the first bid
+Enter the **minimum bid** or more to become the current leader. Confirm the transaction in your wallet.
+
+### 3) Track the leaderboard
+Watch the live leaderboard. If someone outbids you, use **Top up** to add funds and reclaim the lead.
+
+### 4) Cycle ends → winner is featured
+At the 28-day cut-off, the **highest bidder** is locked in and automatically featured across Panthart for the next 28 days.
+
+### 5) New cycle starts immediately
+As soon as a cycle closes, a fresh 28-day cycle opens for the **next** featured slot. You can bid again at any time.
+
+</Steps>
+
+---
+
+## Leaderboard & timing
+
+- **Live status:** The bidding card shows the **current highest bid**, **leader collection**, and a **countdown** to cycle end.  
+- **Timestamps:** All times are shown in your local timezone for clarity.  
+- **Instant updates:** The board updates in real-time when bids are confirmed on-chain.
+
+---
+
+## Rules & edge cases
+
+- **Higher-only bids:** Each incoming bid must be **strictly higher** than the current leader.  
+- **Top-up logic:** Top-ups **increase** your existing bid; your new total must exceed the leader to take the top spot.  
+- **No bids this cycle:** If the countdown hits zero with **no bids**, **Non-Fungible Comrades** is featured for that cycle.  
+- **Auto-start next cycle:** The new bidding window opens **immediately** after the winner is finalized.  
+- **Ownership check:** You can’t bid **for** a collection you don’t own with the connected wallet.
+
+
+---
+
+## Example timeline
+
+- **Day 0** — Cycle opens. Minimum bid is displayed.  
+- **Day 5** — You bid and take the lead.  
+- **Day 10** — Another creator outbids you.  
+- **Day 12** — You **top up** to retake the lead.  
+- **Day 28** — Countdown ends. You’re still the leader → your collection is **featured** for the next 28 days. New cycle opens immediately.
+
+---
+
+## Frequently asked
+
+**Do I need to re-submit my collection each cycle?**  
+If you plan to bid again, yes—submit (or pick) your collection and place a bid in the **new** cycle.
+
+**What if two bids arrive at the same amount?**  
+The UI enforces **strictly higher** amounts; ties aren’t allowed.
+
+**What happens if I’m outbid near the deadline?**  
+You can **top up** anytime before the countdown ends. The last **highest** bid at the deadline wins.
+
+**What if I connect the wrong wallet?**  
+You won’t pass ownership validation and won’t be able to bid for that collection.
+
+---
+
+## Quick reference
+
+- **Eligibility:** Connected wallet must own the collection.  
+- **Cycle:** 28 days feature window, then auto-rollover.  
+- **Bids:** Must exceed the current highest; **top-ups** are allowed.  
+- **Winner:** Highest bid at cycle end.  
+- **Fallback:** No bids → **Non-Fungible Comrades** featured.  
+- **Surfaces:** Featured placements across core marketplace pages.
+
+<Callout type="success" emoji="🌟">
+Ready to climb the marquee? Submit your collection, place a bid, and keep an eye on the clock. The leaderboard favors the bold.
+</Callout>

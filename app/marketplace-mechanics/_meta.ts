@@ -1,5 +1,5 @@
 
-{
+export default {
   "fees-and-rewards": "Fees & Rewards",
   "reward-distributor": "Reward Distributor",
   "multisig-admin": "Multisig Admin"

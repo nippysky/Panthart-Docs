@@ -1,20 +1,33 @@
+import { Callout, Steps } from 'nextra/components'
+
 export const metadata = { title: 'Networks & Wallets' }
 
 # Networks & Wallets
 
-Panthart runs on **Electroneum EVM**.
+Panthart runs on **Electroneum EVM**. You’ll interact with the marketplace using an EVM wallet (for example, MetaMask) on the Electroneum network.
+
+<Callout type="warning">
+Always verify chain settings from official sources before adding a network. Electroneum mainnet uses <strong>Chain ID 52014</strong> and native currency <strong>ETN</strong>.
+</Callout>
+
+---
 
 ## Add Electroneum to MetaMask
-1. Open MetaMask → **Networks** → **Add network**.
-2. Enter RPC details (chain ID, currency symbol).  
-3. Save, then switch to Electroneum.
 
-> **Security:** Always verify RPC/chain IDs from official Electroneum sources.
+<Steps>
+  <ol>
+    <li>Open MetaMask → click the <em>network</em> selector → <strong>Add network</strong>.</li>
+    <li>Use the official Electroneum documentation or a trusted chain registry (e.g., Chainlist) to prefill details, then review before saving.</li>
+    <li>Switch to <strong>Electroneum</strong> (you’ll see ETN as the native currency).</li>
+  </ol>
+</Steps>
 
-## Supported wallets
-- **MetaMask** (desktop & mobile dapp browsers)
-- Any wallet that supports custom EVM networks and standard `eth_*` RPC
-
-## Troubleshooting
-- **“Wrong network”** banner: switch to Electroneum in your wallet.
-- **Nonce too high/low**: reset account in wallet → try again.
+**Fields to review (example):**
+```json
+{
+  "chainName": "Electroneum Mainnet",
+  "chainId": "0xCB4E",          // 52014 decimal
+  "nativeCurrency": { "name": "Electroneum", "symbol": "ETN", "decimals": 18 },
+  "rpcUrls": ["<official or trusted RPC URL>"],
+  "blockExplorerUrls": ["<official explorer>"]
+}

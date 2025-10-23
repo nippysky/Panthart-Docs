@@ -1,14 +1,155 @@
+import { Callout, Steps, Tabs } from 'nextra/components'
+import DocsCards from 'components/DocsCard'
+
+export const metadata = { title: 'Overview' }
+
 # Overview
 
-Panthart lets you **launch**, **list**, and **trade** ERC-721 and ERC-1155 NFTs. Creators can mint:
-- **Collection (ERC-721 Drop)** — allowlist/presale + public mint, or self-mint now and open later
-- **Single NFT (ERC-721)** — true 1/1 art with unique metadata
-- **Single (ERC-1155)** — many editions with shared metadata (passes, merch, game items)
+Panthart lets you **launch**, **list**, and **trade** NFTs on **Electroneum EVM**, supporting both **ERC-721** and **ERC-1155**.  
+Creators get clean minting flows; collectors get fast, low-friction purchases and auctions. Everything settles **on-chain**.
 
-**Fees**
-- Trading: **2.5%** (1.5% → Reward Distributor, 1% → Panthart)
-- Creation: a small fee covering IPFS hosting + service
+<Callout type="info">
+Non-custodial by design: your wallet stays in your control. Settlement sends NFT → buyer, fees/royalties → recipients, and proceeds → seller <em>atomically</em>.
+</Callout>
 
-**Admin & Security**
-- Admin operations secured by a **multisig** wallet
-- Reward distribution handled by a dedicated **Reward Distributor** contract
+---
+
+## What you can create
+
+<Tabs items={['721 Drop', 'Single 721', 'Single 1155']}>
+
+  <Tabs.Tab>
+  ### Collection (ERC-721 Drop)
+  Launch a collection with **allowlist/presale** and **public mint**, or self-mint items now and open the drop later.  
+  Common uses: full collections, phased reveals, community allowlists.
+
+  **Highlights**
+  - Supply cap, presale window, public mint, optional reveal
+  - Creator controls on metadata/reveal and mint schedule
+  - Plays nicely with marketplaces and wallets
+
+  **Go deeper →** [/creators/create-nft/erc721-drop](/creators/create-nft/erc721-drop)
+  </Tabs.Tab>
+
+  <Tabs.Tab>
+  ### Single NFT (ERC-721)
+  Mint a **true 1/1** with unique metadata—ideal for single artworks or high-value collectibles.
+
+  **Highlights**
+  - One-of-one provenance
+  - Immediate fixed-price listing or timed auction
+  - Royalty policy honored where configured
+
+  **Go deeper →** [/creators/create-nft/erc721-single](/creators/create-nft/erc721-single)
+  </Tabs.Tab>
+
+  <Tabs.Tab>
+  ### Single (ERC-1155)
+  Create one token with **many editions** (shared metadata).  
+  Perfect for passes, merch, game items, and open editions.
+
+  **Highlights**
+  - Total supply you control
+  - Flexible distribution (creator-minted or public)
+  - Efficient transfers and listings
+
+  **Go deeper →** [/creators/create-nft/erc1155-single](/creators/create-nft/erc1155-single)
+  </Tabs.Tab>
+
+</Tabs>
+
+---
+
+## Fees (at a glance)
+
+- **Marketplace fee:** **2.5%** per trade — **1.5% → Reward Distributor** (for Non-Fungible Comrades holders), **1% → Panthart**  
+- **Creation fee:** small, shown in the UI **before** mint; covers **IPFS pinning/bandwidth** and convenience services  
+- **Gas:** paid by the caller to the network on every transaction (ETN, or ERC-20 approvals where relevant)
+
+<Callout type="warning">
+Listing currency = settlement currency. If you list in an ERC-20, fees/royalties/proceeds are paid in that token. First-time ERC-20 use requires a standard <code>approve</code> to the marketplace contract.
+</Callout>
+
+**Learn more**  
+- Creators → [/creators/royalties-fees](/creators/royalties-fees)  
+- Governance → [/governance-and-policies/fees-schedule](/governance-and-policies/fees-schedule)
+
+---
+
+## Admin & security (how the protocol stays safe)
+
+- **Multisig Admin (2-of-N):** protocol-level changes (fee wallets/params, pausable modules, distributor settings) require **two signatures**.  
+- **Reward Distributor:** receives **1.5%** of each trade and makes pro-rata rewards claimable by **Non-Fungible Comrades** holders.  
+- **Contract transparency:** all addresses live at **References →** [/references/contract-addresses](/references/contract-addresses); ABIs at **References →** [/references/abis](/references/abis).
+
+<Callout>
+Always confirm the spender/contract in wallet prompts matches the addresses in References. If something looks unfamiliar, cancel.
+</Callout>
+
+---
+
+## From zero to first trade
+
+<Steps>
+  <ol>
+    <li><strong>Connect wallet</strong> — switch to Electroneum EVM if prompted.</li>
+    <li><strong>Create</strong> — pick <em>721 Drop</em>, <em>Single 721</em>, or <em>Single 1155</em>; upload media/metadata.</li>
+    <li><strong>List</strong> — fixed price or timed auction; confirm approvals if it’s your first time.</li>
+    <li><strong>Sell & settle</strong> — sale finalizes on-chain; fees/royalties distribute; proceeds hit your wallet.</li>
+  </ol>
+</Steps>
+
+---
+
+## Quick actions
+
+<DocsCards
+  items={[
+    {
+      title: 'Create: 721 Drop',
+      desc: 'Allowlist/presale + public mint with optional reveal.',
+      href: '/creators/create-nft/erc721-drop',
+      badge: 'Creators'
+    },
+    {
+      title: 'Create: Single 721',
+      desc: 'Mint a true 1/1 with unique metadata.',
+      href: '/creators/create-nft/erc721-single',
+      badge: 'Creators'
+    },
+    {
+      title: 'Create: Single 1155',
+      desc: 'One token, many editions—passes, merch, game items.',
+      href: '/creators/create-nft/erc1155-single',
+      badge: 'Creators'
+    },
+    {
+      title: 'Buying & Bidding',
+      desc: 'Fixed-price purchases and timed auctions.',
+      href: '/collectors/buying-and-bidding',
+      badge: 'Collectors'
+    },
+    {
+      title: 'Transfers & Escrow',
+      desc: 'How settlement, custody, and refunds work.',
+      href: '/collectors/transfers-and-escrow',
+      badge: 'Collectors'
+    },
+    {
+      title: 'Contract Addresses',
+      desc: 'Canonical on-chain targets and verification links.',
+      href: '/references/contract-addresses',
+      badge: 'References'
+    }
+  ]}
+/>
+
+---
+
+## See also
+
+- Getting Started → [/getting-started](/getting-started)  
+- Media & Metadata → [/creators/media-metadata](/creators/media-and-metadata)  
+- Collections Management → [/creators/collections-management](/creators/collections-management)  
+- Multisig Admin → [/governance-and-policies/multisig-admin](/governance-and-policies/multisig-admin)  
+- Reward Distributor → [/rewards/reward-distributor](/rewards/reward-distributor)

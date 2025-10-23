@@ -1,30 +1,130 @@
 import { Callout, Steps } from 'nextra/components'
 
-export const metadata = { title: 'Single (ERC-1155)' }
+export const metadata = { title: 'Single-Token Drop (ERC-1155)' }
 
-# Single (ERC-1155)
+# Single-Token Drop (ERC-1155)
 
-**Best for:** editions/passes with shared metadata.
+**Best for:** editions/passes where every holder shares the **same metadata** (one token type, many copies).  
+This implementation mints a **single token ID (`1`)** with configurable **max supply**, **price**, and **per-wallet cap**. Royalties are **immutable** (ERC-2981).
 
+---
+
+## Pre-flight checklist (what the UI validates)
+
+- **Name & Symbol**: required, human-readable.
+- **Base URI**: final metadata prefix (e.g. `ipfs://<CID>`), **no trailing slash**.  
+  The contract sets `uri(1) = baseURI + "/1.json"`.
+- **Max Supply**: integer **> 0** — total number of editions that can ever exist.
+- **Mint Price**: integer **> 0** in the chain’s native coin. Users pay `quantity * mintPrice`.
+- **Max Per Wallet**: integer **> 0** — lifetime cap per wallet across all mints.
+- **Royalties (ERC-2981)**: recipient is non-zero, BPS ≤ **1000** (10%). Immutable after init.
+- **Platform fee**: exact `feeAmount` (native coin) is forwarded at initialization.
+- **Owner wallet**: injected by **NFTFactory** during clone creation; required for withdraws.
+
+<Callout type="warning" emoji="⚠️">
+Do **not** include a trailing slash in <code>baseURI</code>. The contract composes <code>uri(1)</code> as <code>baseURI + "/1.json"</code>.
+</Callout>
+
+---
+
+## What the contract does (tl;dr)
+
+- **Cloneable** (EIP-1167) via **NFTFactory**; owner set to the caller who creates the clone.
+- **Single token type**: constant `TOKEN_ID = 1`.
+- **Config at init**: `maxSupply`, `mintPrice`, `maxPerWallet`, `baseURI`, default royalty.
+- **Public mint**: anyone can call `mint(quantity)` (subject to caps and price).
+- **Accounting**: tracks `totalMinted` and `mintedPerWallet[address]`.
+- **Events**: `Initialized`, `DropMinted`, `ProceedsWithdrawn`.
+- **Withdraw**: owner can withdraw contract balance (`withdrawProceeds(to)`).
+
+---
+
+## Metadata layout (for `1.json`)
+
+```json
+{
+  "name": "Panthart Access Pass",
+  "description": "An editioned ERC-1155 pass granting utilities on Panthart.",
+  "image": "ipfs://bafy.../image.png",
+  "animation_url": "ipfs://bafy.../video.mp4",
+  "attributes": [
+    { "trait_type": "Type", "value": "Access Pass" },
+    { "trait_type": "Version", "value": "v1" }
+  ]
+}
+```
+
+---
+
+All token holders reference the same metadata file (…/1.json). If you need per-edition serials, surface them via transfer history or an off-chain indexer.
+
+--- 
+### Step-by-step
 <Steps>
+1) Prepare shared metadata
 
-### Prepare shared metadata
-Include a clear title and edition context (e.g., “Pass v1”).
+Upload the artwork/media to IPFS (or equivalent) and create 1.json pointing to those assets.
 
-### Set supply
-Choose total editions. Scarcity is a creative decision; you can mint initial supply now and enable public mint later.
+Verify the JSON resolves quickly and passes your marketplace preview checks.
 
-### Creation
-Pay **creation fee** (IPFS + service).
+2) Configure the drop
 
-### Mint or enable public mint
-Mint to treasury/creator wallet or open public mint.
+Base URI (no trailing slash), Max Supply, Mint Price, Max Per Wallet.
 
-### List
-Sell editions individually or as a lot.
+Set royalty recipient + BPS (≤ 10%). This locks at initialization.
+
+3) Initialize via Factory
+
+The UI calls NFTFactory to clone the ERC-1155 implementation and pass your config.
+
+Approve the transaction; the platform fee is forwarded automatically.
+
+On success, contract emits Initialized(owner, maxSupply, mintPrice, maxPerWallet).
+
+4) Open mint
+
+Users call mint(quantity) paying quantity * mintPrice.
+
+Enforced: quantity > 0, totalMinted + quantity ≤ maxSupply, and
+mintedPerWallet[sender] + quantity ≤ maxPerWallet.
+
+5) Withdraw proceeds
+
+As owner, click Withdraw in the UI to send the full balance to your payout wallet (emits ProceedsWithdrawn(to, amount)).
 
 </Steps>
 
-<Callout type="info">
-All holders share the same metadata. If per-edition serials matter, surface them via transfer history or an indexer.
-</Callout>
+---
+
+### Reference (functions & events)
+
+Minting
+`mint(uint256 quantity)` — payable
+
+Views
+`uri(uint256 tokenId)` → `string (valid only for tokenId == 1)` ·
+`supportsInterface(bytes4)` → `bool (ERC-1155 + ERC-2981)`
+
+Admin
+`withdrawProceeds(address payable to)` — owner only
+
+Events
+`Initialized(owner, maxSupply, mintPrice, maxPerWallet)` ·
+`DropMinted(minter, tokenId, quantity, uri)` ·
+`ProceedsWithdrawn(to, amount)`
+
+---
+
+### Gotchas & tips
+
+One token ID only: TOKEN_ID is always 1.
+
+No allowlist/presale: this drop is a straight public mint (with per-wallet and supply caps).
+
+Royalty immutability: choose carefully — there are no royalty setters post-init.
+
+Native coin only: payments are in the chain’s native coin; no ERC-20 support here.
+
+Indexing editions: all holders share uri(1). If you want visible serial numbers, use off-chain indexing or custom UI labeling.
+
+<Callout type="info" emoji="🧭"> For a presale/public split, per-tx limits, and allowlists, use the <strong>ERC-721 Drop</strong> flow. For a single 1/1, use the <strong>ERC-721 Single</strong> flow. </Callout>

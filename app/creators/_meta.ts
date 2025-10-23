@@ -1,5 +1,4 @@
-{
-  "": "Creators",
+export default{
   "create-nft": "Create",
   "media-and-metadata": "Media & Metadata",
   "royalties-and-fees": "Royalties & Fees",

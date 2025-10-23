@@ -1,7 +1,7 @@
-{
+export default {
   "erc721": "ERC-721",
+  "factory-drop": "ERC721 Drop",
   "erc1155": "ERC-1155",
-  "factory-drop": "Factory / Drop",
   "nft-factory": "NFT Factory",
   "marketplace": "Marketplace",
   "featured-auction": "Featured Collection Auction",

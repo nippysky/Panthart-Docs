@@ -4,22 +4,165 @@ export const metadata = { title: 'Collection (ERC-721 Drop)' }
 
 # Collection (ERC-721 Drop)
 
-<Callout type="info">
-Use a **placeholder** base URI if you plan to reveal later. Keep final metadata immutable once revealed.
+The **721 Drop** flow launches a collection in clean, predictable phases (optional allowlist/presale → public mint).  
+It’s built for fair access, fixed supply, and simple on-chain parameters—**no reveal step** is used in Panthart’s flow.
+
+---
+
+## Pre-flight checklist (what the UI validates)
+
+- **Name & Symbol**: required and human-readable.
+- **Max Supply**: integer **> 0** (hard cap).
+- **Base URI**: a final, stable URL (e.g. `ipfs://<CID>`), **no trailing slash**.  
+  The contract computes `tokenURI = baseURI + "/" + tokenId + ".json"`.
+- **Allowlist (optional)**: a plain list of wallet addresses to include in the Merkle tree.  
+  Addresses are checksummed/normalized and deduplicated by the UI.
+  <Callout type="info" emoji="🧩">
+    Leaf format is <code>keccak256(abi.encodePacked(address))</code>. There is **no per-address quantity allowance** in this contract—just in/out membership.
+  </Callout>
+- **Per-wallet limit**: integer **> 0** (lifetime cap, enforced for both presale and public).
+- **Per-transaction limit**: integer **> 0**.
+- **Prices**: positive, in the **chain’s native coin** (payable <code>msg.value == quantity * price</code>).
+- **Schedule**:  
+  - Public sale **start** must be in the future at initialization.  
+  - If using presale: **start < end**, and public **start > presale end**.  
+  - Presale **price ≤ public price**.
+- **Royalties (ERC-2981)**: recipient + BPS ≤ **1000** (10%). Immutable after deploy.
+- **Platform fee**: exact `feeAmount` in native coin is forwarded at initialization.
+- **Owner wallet**: the connected wallet becomes the **collection owner** (via factory injection) and is required for admin actions (withdraw).
+
+---
+
+## What the contract does (tl;dr)
+
+- **Cloneable** (EIP-1167); owner injected by the **NFTFactory** at creation.
+- **Single base URI** (no trailing slash); token IDs are **1..maxSupply**.
+- **Presale (optional)** via **Merkle whitelist** and windowed timebox.  
+  Presale has its **own maxSupply** cap and price.
+- **Public sale** with per-tx and per-wallet limits.
+- **Limits**: `maxPerWallet` and `maxPerTx` come from the **public sale config** and apply during presale too.
+- **Royalties**: ERC-2981 default royalty set once at init.
+- **Events**: emits mints, initialization, and withdrawals.
+- **Withdraw**: owner can withdraw proceeds (native coin) any time.
+
+---
+
+## Token URI layout
+
+Use stable, content-addressed metadata. With `baseURI = ipfs://bafy...`:
+
+tokenURI(1) -> ipfs://bafy.../1.json
+tokenURI(2) -> ipfs://bafy.../2.json
+
+
+
+Each `*.json` should include standard fields (`name`, `description`, `image`, optional `animation_url`, `attributes`, etc.).
+
+<Callout type="warning" emoji="⚠️">
+Base URI must **not** end with a slash. The contract inserts <code>"/"</code> and <code>".json"</code> for you.
 </Callout>
+
+---
+
+## Allowlist notes (incl. Comrades holders)
+
+- Upload a newline/CSV list of addresses. The UI builds the Merkle root as `keccak256(address)` leaves.  
+- There is **no per-address allowance column**; any such column is ignored by this contract.
+- **Automatic eligibility**: holders of **≥ 100 Comrades** (Non-Fungible Comrades collection) are **automatically included** in the allowlist snapshot.  
+  Practically, the UI unions:
+  1) your uploaded addresses and  
+  2) a snapshot of wallets holding ≥ 100 Comrades  
+  …then generates the Merkle root from that union.
+
+---
+
+## Step-by-step
 
 <Steps>
 
-### Configure contract
-Name, symbol, **max supply**.
+### 1) Prepare your metadata & allowlist
+- Upload all artwork metadata to IPFS (or another permanent store). Confirm the JSONs and media resolve.  
+- Take a snapshot of Comrades holders with **≥ 100** and merge with your uploaded allowlist.  
+- Verify the final list has unique, valid addresses.
 
-### Base URI
-Set placeholder or final base URI (IPFS).
+### 2) Configure sale parameters
+- **Max supply**: hard cap for the whole collection.  
+- **Royalties**: set recipient + BPS (≤ 10%). This is immutable.  
+- **Presale (optional)**: set `start`, `end`, `price`, **presale maxSupply**, and **Merkle root** from the union list.  
+- **Public sale**: set `start` (must be in the future), `price`, `maxPerWallet`, `maxPerTx`.
 
-### Allowlist / Presale (optional)
-Upload addresses, set window, price, per-wallet limits.
+<Callout type="info" emoji="⏱️">
+If presale is used: <strong>presaleStart &lt; presaleEnd &lt;= publicStart</strong>.  
+Presale price must be ≤ public price.
+</Callout>
 
-### Public mint
-Set public price, schedule, and limits.
+### 3) Deploy via Factory (initialize clone)
+- The UI calls the **NFTFactory** to clone the 721 Drop implementation and pass your configs.  
+- You’ll approve a single transaction that also forwards the **platform fee** to the fee recipient.  
+- On success, you’ll see your new collection address and the **DropInitialized** event.
+
+### 4) Point the Base URI (final)
+- Provide `baseURI` **without** a trailing slash (e.g. `ipfs://bafy...`).  
+- Confirm a couple of tokenURIs resolve: `…/1.json`, `…/2.json`, etc.
+
+<Callout type="warning" emoji="🔒">
+This contract exposes no setters for base URI, prices, or schedules after initialization. Treat them as final.
+</Callout>
+
+### 5) Mint windows go live
+- **Presale**: eligible addresses call `presaleMint(quantity, proof)` during the window.  
+  - Enforced: `quantity > 0`, `quantity ≤ maxPerTx`, wallet lifetime ≤ `maxPerWallet`, presale supply cap, and `msg.value == quantity * presalePrice`.  
+- **Public**: anyone can call `mint(quantity)`, with the same per-tx/per-wallet enforcement and public price.
+
+### 6) Withdraw proceeds
+- As owner, use the UI’s **Withdraw** to send the contract balance to your payout wallet.
 
 </Steps>
+
+---
+
+## Reference (functions & events)
+
+**Minting**
+- `presaleMint(uint256 quantity, bytes32[] proof)`  
+- `mint(uint256 quantity)`
+
+**Views**
+- `totalSupply() → uint256` (minted so far)  
+- `tokenURI(uint256 tokenId) → string`  
+- `supportsInterface(bytes4) → bool` (ERC-721 + ERC-2981)
+
+**Admin**
+- `withdrawProceeds(address payable to)` (owner only)
+
+**Events**
+- `DropInitialized(owner, name, symbol)`  
+- `DropMinted(minter, tokenId, uri)`  
+- `ProceedsWithdrawn(to, amount)`
+
+---
+
+## Gotchas & tips
+
+- **Trailing slash**: don’t add one to `baseURI`.  
+- **Quantities in allowlist**: not supported; it’s a simple membership Merkle tree.  
+- **Caps apply everywhere**: `maxPerWallet` and `maxPerTx` are enforced in **both** presale and public.  
+- **Native coin only**: pricing is in the chain’s native coin (e.g., ETH/ETN on its EVM). No ERC-20 payment in this contract.  
+- **ID start**: token IDs start at **1** and increment sequentially.  
+- **Presale cap**: `presaleMinted + quantity ≤ presale.maxSupply`. When presale ends, remaining supply is available to public until `maxSupply`.
+
+---
+
+## Example allowlist (newline)
+
+0xAbc0000000000000000000000000000000000000
+0xDef0000000000000000000000000000000000000
+0x1230000000000000000000000000000000000000
+
+
+
+The UI will union this with the Comrades ≥100 snapshot before generating the Merkle root.
+
+---
+
+That’s the whole dance for the 721 Drop. To compare variants next, check **Single (ERC-721 1/1)** or **1155 Drop (Single-Token)** pages to choose the right mint flavor for your project’s shape.

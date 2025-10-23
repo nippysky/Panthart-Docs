@@ -4,4 +4,5 @@ export default {
   project: {
     link: 'https://github.com/your-org/panthart-docs'
   }
+  
 }

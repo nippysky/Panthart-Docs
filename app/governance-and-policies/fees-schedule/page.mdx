@@ -1,7 +1,125 @@
+import { Callout, Tabs } from 'nextra/components'
+
 export const metadata = { title: 'Fees Schedule' }
 
 # Fees Schedule
 
-- **Marketplace fee**: 2.5% per successful trade (split 1.5% rewards / 1% Panthart).
-- **Creation fee**: displayed during mint; covers IPFS + service.
-- Network gas fees apply on all transactions.
+Panthart charges transparent, on-chain fees. Amounts are shown **in-product before you sign** and are paid in the **listing/bid currency** (ETN or supported ERC-20). Gas is paid to the network by you.
+
+---
+
+## Summary
+
+| Fee type         | When charged                     | Who pays | Amount / split | Notes |
+| ---              | ---                               | ---      | ---            | --- |
+| **Marketplace**  | On successful sale (fixed/auction)| Buyer or Seller* | **2.5%** total → **1.5%** Reward Distributor, **1.0%** Panthart | Taken from sale price at settlement (see “Who pays”). |
+| **Creation**     | During creator flows (mint/setup) | Creator  | Variable       | Covers IPFS pinning/bandwidth and convenience services. Shown before confirmation. |
+| **Royalties**    | On successful sale (if configured)| Seller   | Collection policy | Paid to collection royalty recipient where supported. |
+| **Gas**          | Every on-chain tx                 | Caller   | Network-defined | Paid to validators; non-refundable on success/revert. |
+
+\* **Who pays marketplace fee:** The fee is deducted from the **sale proceeds** at settlement. Practically, the buyer pays the full listed price, and the seller receives the listed price **minus** fees/royalties (and any protocol-specific deductions). Auctions follow the same rule using the winning bid.
+
+<Callout type="info">
+All payout math runs <strong>atomically on-chain</strong> at settlement: fees → rewards & protocol; royalties → collection recipient; remainder → seller. No custody, no manual disbursements.
+</Callout>
+
+---
+
+## Marketplace fee — 2.5%
+
+- **Split:** **1.5%** → **Reward Distributor** (for Non-Fungible Comrades holders), **1.0%** → Panthart fee wallet.  
+- **Scope:** Fixed-price and timed-auction settlements.  
+- **Currency:** Same as the sale (ETN or supported ERC-20).  
+- **Rounding:** Minimal rounding may occur according to token decimals; contracts round consistently.
+
+**Example (fixed price, ETN)**  
+Listed price = **1,000 ETN**; royalty = **5%**  
+- Marketplace fee (2.5%) = 25 ETN  
+  - → Reward Distributor (1.5%) = 15 ETN  
+  - → Panthart (1.0%) = 10 ETN  
+- Royalty (5%) = 50 ETN  
+- **Seller receives = 1,000 − 25 − 50 = 925 ETN**
+
+---
+
+## Creation fee (creator workflows)
+
+- **What it covers:**  
+  - **IPFS pinning & bandwidth** for media/metadata CIDs.  
+  - **Convenience services** (uploads, validation, guardrails, optional reveal helpers).  
+- **How charged:** Displayed clearly **before** you confirm; paid at **creation time**, not at sale.
+- **Pricing policy:** Not fixed. Fees may change with storage/network conditions or service improvements; updates are reflected **in-product** prior to confirmation. Promotions may reduce the fee to **0** for eligible flows.
+
+---
+
+## Royalties
+
+- **Enforcement:** Where a collection has a royalty policy, the marketplace enforces that policy during settlement.  
+- **Order of operations:** Marketplace fee → Royalties → Seller proceeds.  
+- **Cross-market behavior:** Royalties on other UIs/marketplaces are outside Panthart’s control.
+
+---
+
+## Multi-currency behavior
+
+- **In = Out:** Listing/bid currency equals settlement currency; all fees and royalties are computed and paid in that token.  
+- **Approvals:** First-time ERC-20 usage requires a standard **approve** of the marketplace contract (one-time per token).  
+- **No auto-swap:** Panthart does not convert between tokens during settlement.
+
+---
+
+## Auctions specifics
+
+- **No sale, no fee:** If a reserve isn’t met or an auction is canceled before a qualifying bid, **no marketplace or royalty fees** are collected (gas still applies to any actions taken).  
+- **Settlement:** Fees/royalties are computed from the **winning bid** and paid at settlement in the bid token.
+
+---
+
+## Cancellations, edits & failures
+
+- **Delisting / price edit:** You may cancel a listing or change price where the contract allows; you pay gas for those actions.  
+- **Failed tx / revert:** Gas may be consumed even if a transaction reverts; protocol fees and royalties are **only** taken on successful settlement.  
+- **Stale approvals:** If a spender changes, the UI will request a new approval; previous approvals can be revoked from your wallet if desired.
+
+---
+
+## Examples
+
+<Tabs items={['Fixed price — ERC-20', 'Auction — ETN']}>
+
+  <Tabs.Tab>
+  **Fixed price (USDC)**  
+  Listed = **2,500 USDC**; royalty = **0%**  
+  - Fee (2.5%) = 62.5 USDC  
+    - → Rewards 37.5; → Panthart 25.0  
+  - Seller receives = **2,437.5 USDC**
+  </Tabs.Tab>
+
+  <Tabs.Tab>
+  **Auction (ETN)**  
+  Winning bid = **7,300 ETN**; royalty = **7.5%**  
+  - Fee (2.5%) = 182.5 ETN → 109.5 / 73.0 split  
+  - Royalty (7.5%) = 547.5 ETN  
+  - Seller receives = **7,300 − 182.5 − 547.5 = 6,570 ETN**
+  </Tabs.Tab>
+
+</Tabs>
+
+---
+
+## Transparency & changes
+
+- All fee recipients and contract addresses are listed in **References → [Contract Addresses](/references/contract-addresses)**.  
+- Updates to fee schedules are announced in-product prior to effect and reflected in the UI at confirmation time.
+
+<Callout type="warning">
+Always verify the <strong>spender</strong> and <strong>contract addresses</strong> in your wallet prompts. Use the canonical list in References.
+</Callout>
+
+---
+
+## Related
+
+- **Creators → [Royalties & Fees](/creators/royalties-fees)**  
+- **Collectors → [Buying & Bidding](/collectors/buying-and-bidding)**  
+- **References → [Contract Addresses](/references/contract-addresses)** • **[ABIs](/references/abis)**

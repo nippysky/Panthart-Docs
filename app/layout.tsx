@@ -3,11 +3,12 @@ import 'nextra-theme-docs/style.css'
 import { Footer, Layout, Navbar } from 'nextra-theme-docs'
 import {  Head } from 'nextra/components'
 import { getPageMap } from 'nextra/page-map'
+import { FaTelegram } from 'react-icons/fa6'
 
 export const metadata = {
   title: 'Panthart Documentation',
   description: 'Official documentation for the Panthart NFT marketplace',
-  metadataBase: new URL('http://localhost:3000'), // change to your prod URL at deploy time
+  metadataBase: new URL('http://localhost:3000'), 
   openGraph: {
     title: 'Panthart Documentation',
     images: ['/og-image.png'],
@@ -25,8 +26,9 @@ const navbar = (
         <b>Panthart Documentation</b>
       </div>
     }
-    projectLink="https://github.com/nippysky/Panthart-Marketplace"
-    chatLink="https://t.me/your-telegram" // update if you want
+    projectLink="https://github.com/nippysky/Panthart-Docs"
+    chatLink="https://t.me/DecentroneumGroupChat"
+    chatIcon={<FaTelegram size={30}/>}
   />
 )
 
@@ -45,17 +47,19 @@ const footer = (
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" dir="ltr" suppressHydrationWarning>
-      <Head />
+      <Head >
+             <link rel="icon" href="/favicon.ico" sizes="any" />
+      </Head>
       <body>
         <Layout
           navbar={navbar}
           footer={footer}
           pageMap={await getPageMap()}
-          docsRepositoryBase="https://github.com/nippysky/panthart-docs/blob/main"  // update once you push the docs repo
+          docsRepositoryBase="https://github.com/nippysky/Panthart-Docs"
           feedback={{
-            content: 'Question? Give us feedback ↗',
-            labels: 'docs,feedback'
+            content: null,
           }}
+          editLink={null}
         >
           {children}
         </Layout>

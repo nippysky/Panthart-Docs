@@ -1,4 +1,4 @@
-{
+export default {
   "erc721-drop": "Collection (ERC-721 Drop)",
   "erc721-single": "Single NFT (ERC-721)",
   "erc1155-single": "Single (ERC-1155)"

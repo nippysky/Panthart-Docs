@@ -1,19 +1,121 @@
+import { Callout, Steps } from 'nextra/components'
+import DocsCards from 'components/DocsCard'
+
 export const metadata = { title: 'Getting Started' }
 
 # Getting Started
 
-Panthart is an NFT marketplace for **ERC-721** and **ERC-1155** on Electroneum EVM. This guide gets you from zero to your first mint, listing, and trade.
+Panthart is an NFT marketplace for **ERC-721** and **ERC-1155** on **Electroneum EVM**.  
+This guide takes you from zero to your first **mint**, **listing**, and **trade**—safely and quickly.
+
+<Callout type="warning">
+Always verify you are on <strong>Electroneum EVM</strong> and interacting with the official contracts listed in  
+<strong>References → <a href="/references/contract-addresses">Contract Addresses</a></strong>. If your wallet shows an unknown spender or address, <strong>cancel</strong>.
+</Callout>
+
+---
 
 ## Who this is for
-- **Creators**: launch a 721 **Drop**, mint a **Single 721**, or create a **Single 1155** edition.
-- **Collectors**: buy fixed-price items or participate in auctions.
+
+- **Creators** — launch a 721 **Drop**, mint a **Single 721**, or create a **Single 1155** edition.  
+- **Collectors** — buy fixed-price items or bid in timed auctions.
+
+---
 
 ## What you’ll need
-- A browser wallet (e.g., **MetaMask**) connected to **Electroneum EVM**.
-- A small amount of gas.
-- (Creators) Media files + metadata; creation fee covers **IPFS** hosting and service costs.
+
+- A browser wallet (e.g., **MetaMask**, WalletConnect-compatible) connected to **Electroneum EVM**.  
+- A small amount of ETN (or a supported **ERC-20** for listings/auctions) for **gas**.  
+- **Creators:** your media files and basic metadata. The **creation fee** covers **IPFS** pinning and convenience services.
+
+<Callout type="info">
+Multi-currency is supported. Listing currency = settlement currency.  
+First-time ERC-20 usage requires a one-time <code>approve</code> for the marketplace contract.
+</Callout>
+
+---
+
+## 2-minute setup
+
+<Steps>
+  <ol>
+    <li><strong>Connect wallet</strong> — open Panthart and click <em>Connect</em>. Your wallet will switch to Electroneum EVM if needed.</li>
+    <li><strong>Fund gas</strong> — make sure you hold a little ETN for transactions (and any ERC-20 you plan to list in).</li>
+    <li><strong>Verify addresses</strong> — cross-check spender/contract targets with <a href="/references/contract-addresses">Contract Addresses</a>.</li>
+    <li><strong>Start</strong> — choose a creator flow below, or jump to the collector guides.</li>
+  </ol>
+</Steps>
+
+---
+
+## Pick a path
+
+<DocsCards
+  items={[
+    {
+      title: 'Create: 721 Drop',
+      desc: 'Allowlist/presale + public mint with optional reveal.',
+      href: '/creators/create-nft/erc721-drop',
+      badge: 'Creators'
+    },
+    {
+      title: 'Create: Single 721',
+      desc: 'True 1/1 artwork with unique metadata.',
+      href: '/creators/create-nft/erc721-single',
+      badge: 'Creators'
+    },
+    {
+      title: 'Create: Single 1155',
+      desc: 'One token, many editions—passes, merch, game items.',
+      href: '/creators/create-nft/erc1155-single',
+      badge: 'Creators'
+    },
+    {
+      title: 'Buying & Bidding',
+      desc: 'Fixed-price purchases and timed auctions.',
+      href: '/collectors/buying-and-bidding',
+      badge: 'Collectors'
+    },
+    {
+      title: 'Transfers & Escrow',
+      desc: 'How settlement, custody, and refunds work.',
+      href: '/collectors/transfers-and-escrow',
+      badge: 'Collectors'
+    },
+    {
+      title: 'Profile',
+      desc: 'Username, avatar, banner, rewards, and proceeds.',
+      href: '/collectors/profile',
+      badge: 'Collectors'
+    }
+  ]}
+/>
+
+---
+
+## Essentials you should know
+
+- **Fees & rewards:** Marketplace fee is **2.5%** (1.5% → Reward Distributor, 1% → Panthart).  
+  See **Creators → <a href="/creators/royalties-fees">Royalties & Fees</a>** and **Governance → <a href="/governance-and-policies/fees-schedule">Fees Schedule</a>**.  
+- **Royalties:** Honored during settlement when the collection defines a royalty policy.  
+- **Media & metadata:** Best-practice JSON and IPFS guidance: **Creators → <a href="/creators/media-metadata">Media & Metadata</a>**.  
+- **Collections:** Edit description, logo, banner, and withdraw proceeds as the owner: **Creators → <a href="/creators/collections-management">Collections Management</a>**.  
+- **Safety:** Responsible disclosure and phishing guidance: **Governance → <a href="/governance-and-policies/security-and-disclosure">Security & Disclosure</a>**.
+
+---
 
 ## Quick links
-- **Create flow**: `/creators/create-nft/erc721-drop`, `/creators/create-nft/erc721-single`, `/creators/create-nft/erc1155-single`
-- **Fees & rewards**: `/marketplace-mechanics/fees-and-rewards`
-- **Security**: `/governance-and-policies/security-and-disclosure`
+
+- **Create 721 Drop:** [/creators/create-nft/erc721-drop](/creators/create-nft/erc721-drop)  
+- **Create Single 721:** [/creators/create-nft/erc721-single](/creators/create-nft/erc721-single)  
+- **Create Single 1155:** [/creators/create-nft/erc1155-single](/creators/create-nft/erc1155-single)  
+- **Buying & Bidding:** [/collectors/buying-bidding](/collectors/buying-and-bidding)  
+- **Transfers & Escrow:** [/collectors/transfers-escrow](/collectors/transfers-and-escrow)  
+- **Royalties & Fees:** [/creators/royalties-fees](/creators/royalties-fees)  
+- **Fees Schedule:** [/governance-and-policies/fees-schedule](/governance-and-policies/fees-schedule)  
+- **Contract Addresses:** [/references/contract-addresses](/references/contract-addresses)  
+- **ABIs:** [/references/abis](/references/abis)
+
+<Callout type="success">
+That’s it—your runway is clear. Start minting, listing, or bidding, and the contracts handle settlement <em>atomically</em> on-chain.
+</Callout>

@@ -2,11 +2,87 @@ export const metadata = { title: 'Glossary' }
 
 # Glossary
 
-**ERC-721** — NFT standard for **unique** tokens.  
-**ERC-1155** — Multi-token standard for **editions** (shared metadata) and fungible items.  
-**Drop** — Time-boxed or phased mint for a collection (allowlist/presale, then public).  
-**Creation fee** — Small fee that covers **IPFS** hosting and Panthart service handling.  
-**Marketplace fee** — **2.5%** taken on successful trades (1.5% → Rewards, 1% → Panthart).  
-**Reward Distributor** — Contract that distributes reward share to **Non-Fungible Comrades** holders.  
-**Multisig** — Multi-signature wallet securing admin operations.  
-**IPFS** — Decentralized content storage; Panthart pins media/metadata for availability.
+A compact, no-handwaving reference for terms you’ll see around Panthart and Electroneum EVM.
+
+---
+
+## Core standards
+
+**ERC-721** — NFT standard for **unique** tokens (1 token ID = 1 unique item). Great for 1/1 art and distinct collectibles.  
+**ERC-1155** — Multi-token standard for **editions** (many owners share the same token ID) and semi-fungible items (passes, game items).  
+**ETN** — Native currency of the Electroneum EVM network. Used for gas; can also be a listing/settlement currency.
+
+---
+
+## Minting & collections
+
+**Drop (ERC-721 Drop)** — A phased mint for a collection (e.g., allowlist/presale → public mint → reveal). See **[Create → Collection (721 Drop)](/creators/create-nft/erc721-drop)**.  
+**Single 721** — A true **1/1** with unique metadata. See **[Create → Single 721](/creators/create-nft/erc721-single)**.  
+**Single 1155** — An **edition** (one token ID, many copies). See **[Create → Single 1155](/creators/create-nft/erc1155-single)**.  
+**Max supply** — Hard cap for a token or collection; once reached, no further minting.  
+**Allowlist** — A list of addresses allowed to mint early or at a special price/limit.  
+**Reveal** — The switch from placeholder art/metadata to final on-chain/IPFS URIs.  
+**Base URI** — Prefix used by contracts to construct metadata URLs (e.g., `ipfs://…/{id}.json`).  
+**Provenance** — A cryptographic commitment to the final artwork order (optional, used by some collections to prove fairness).
+
+---
+
+## Marketplace & trading
+
+**Fixed-price listing** — Buy now at a posted price; transfers on payment.  
+**Auction** — Highest valid bid at end time wins; settlement transfers NFT and funds.  
+**Reserve price** — Minimum price an auction must reach before it can settle to a bidder.  
+**Bid increment** — Minimum step above the current highest bid.  
+**Escrow** — Assets/funds held by the marketplace contract during listings/auctions to guarantee delivery at settlement.  
+**Settlement** — The on-chain exchange of NFT ↔ currency after a sale/auction completes.  
+**Delist** — Cancel a listing before it executes; returns the escrowed NFT to the owner.
+
+---
+
+## Fees, rewards, and royalties
+
+**Marketplace fee** — **2.5%** per successful trade (split **1.5% → Rewards** and **1% → Panthart**). See **[Fees & Rewards](/marketplace-mechanics/fees-and-rewards)**.  
+**Creation fee** — A small, upfront fee that covers **IPFS pinning/bandwidth** and creator-friendly services (uploads, validation).  
+**Royalty** — A percentage of sale price that’s paid to the creator/recipient when supported by the marketplace.  
+**Reward Distributor** — Contract that accumulates **1.5%** of every trade and lets **Non-Fungible Comrades** holders **claim** their share. See **[Reward Distributor](/marketplace-mechanics/reward-distributor)**.  
+**Claim** — On-chain action where an eligible holder withdraws accrued rewards.
+
+---
+
+## Media & metadata
+
+**IPFS** — Decentralized content storage; Panthart pins media/metadata for high availability.  
+**Metadata (token)** — JSON describing an NFT (`name`, `description`, `image`, `animation_url`, `attributes`, royalties). See **[Media & Metadata](/creators/media-and-metadata)**.  
+**Attributes / Traits** — Structured properties used for filtering and rarity (e.g., `{"trait_type":"Background","value":"Lime"}`).  
+**Animation URL** — Optional link to video/audio/interactive media (e.g., MP4, WebM, GIF, HTML).
+
+---
+
+## Wallet & chain operations
+
+**Approval** — A one-time permission that lets the marketplace transfer a token (NFT or ERC-20) for trading.  
+**Permit / EIP-2612** — Signature-based ERC-20 approval flow; if a token supports it, approvals can be gas-optimized.  
+**Gas** — Network fee paid in **ETN** for executing transactions.  
+**Nonce** — Per-account transaction counter; mismatches can cause “nonce too high/low” errors (reset account to fix).  
+**Signature** — Wallet-produced proof used in logins, allowlists, or off-chain authorizations.
+
+---
+
+## Security & governance
+
+**Multisig** — Multi-signature wallet that authorizes sensitive admin changes. Panthart’s multisig requires **2 signatures** to execute. See **[Multisig Admin](/governance-and-policies/multisig-admin)**.  
+**Verified address** — A contract address confirmed on the official explorer. Always cross-check with **[Contract Addresses](/references/contract-addresses)**.  
+**Non-custodial** — You hold the keys; Panthart contracts move assets only with your on-chain approvals and signatures.
+
+---
+
+## Useful UI terms
+
+**Floor price** — Lowest listing price in a collection.  
+**Activity** — Recent sales/listings/bids (collection-level analytics).  
+**Edition size** — Total number of copies for an ERC-1155 token ID.  
+**Owner** — Current holder address of an NFT; “creator” is the original minter.
+
+---
+
+If a term isn’t listed here but appears in the UI, check the closest section above or search the docs with **CTRL K**.
