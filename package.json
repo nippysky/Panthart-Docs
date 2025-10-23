@@ -13,12 +13,14 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
+    "postbuild": "pagefind --site .next/server/app --output-path public/_pagefind",
     "start": "next start"
   },
   "devDependencies": {
     "@types/node": "^24.9.1",
     "@types/react": "^19.2.2",
     "mdx": "^0.3.1",
+    "pagefind": "^1.4.0",
     "typescript": "^5.9.3"
   }
 }
